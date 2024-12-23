@@ -16,59 +16,75 @@ export default function ATSOptimization() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // This is where you'd typically send the content to your backend for analysis
-    // For now, we'll just set a random score
     setScore(Math.floor(Math.random() * 100))
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white dark:bg-slate-900">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">ATS Optimization</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+          ATS Optimization
+        </h2>
       </div>
       
-      <Card>
+      <Card className="bg-white dark:bg-slate-800">
         <CardHeader>
-          <CardTitle>Resume Content</CardTitle>
-          <CardDescription>Paste your resume content here for ATS analysis.</CardDescription>
+          <CardTitle className="text-gray-900 dark:text-white">Resume Content</CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-300">
+            Paste your resume content here for ATS analysis
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
-            <div className="grid w-full items-center gap-4">
-              <Textarea 
-                value={resumeContent} 
-                onChange={handleInputChange} 
-                placeholder="Paste your resume content here..." 
-                className="min-h-[200px]"
-              />
-            </div>
+            <Textarea 
+              value={resumeContent} 
+              onChange={handleInputChange} 
+              placeholder="Paste your resume content here..." 
+              className="min-h-[200px] border-blue-200 dark:border-blue-800 focus:border-blue-500"
+            />
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={() => setResumeContent("")}>Clear</Button>
-          <Button onClick={handleSubmit}>Analyze</Button>
+          <Button 
+            variant="outline" 
+            className="border-blue-500 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-300"
+            onClick={() => setResumeContent("")}
+          >
+            Clear
+          </Button>
+          <Button 
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700"
+            onClick={handleSubmit}
+          >
+            Analyze
+          </Button>
         </CardFooter>
       </Card>
 
       {score > 0 && (
-        <Card>
+        <Card className="bg-white dark:bg-slate-800">
           <CardHeader>
-            <CardTitle>ATS Optimization Score</CardTitle>
-            <CardDescription>Here's how well your resume performs against ATS systems.</CardDescription>
+            <CardTitle className="text-gray-900 dark:text-white">ATS Optimization Score</CardTitle>
+            <CardDescription className="text-gray-600 dark:text-gray-300">
+              Here's how well your resume performs against ATS systems
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span>Score: {score}%</span>
+                <span className="text-gray-900 dark:text-white">Score: {score}%</span>
                 <span className={score >= 70 ? "text-green-500" : "text-red-500"}>
                   {score >= 70 ? "Good" : "Needs Improvement"}
                 </span>
               </div>
-              <Progress value={score} className="w-full" />
+              <Progress 
+                value={score} 
+                className="w-full bg-blue-100 dark:bg-blue-900"
+              />
             </div>
           </CardContent>
           <CardFooter>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               {score >= 70 
                 ? "Great job! Your resume is well-optimized for ATS systems." 
                 : "Consider revising your resume to improve its performance with ATS systems."}
@@ -79,4 +95,3 @@ export default function ATSOptimization() {
     </div>
   )
 }
-

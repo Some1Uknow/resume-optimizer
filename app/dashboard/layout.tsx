@@ -1,4 +1,3 @@
-import { Header } from "@/components/header"
 import { Sidebar } from "@/components/sidebar"
 
 export default function DashboardLayout({
@@ -8,7 +7,6 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
       <div className="flex-1 flex">
         <Sidebar />
         <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
