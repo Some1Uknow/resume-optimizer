@@ -8,8 +8,8 @@ export function Header() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm">
       <div className="container mx-auto flex justify-between items-center py-4 px-4">
-        <Link href="/" className="flex flex-row items-center space-x-2">
-          <File className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3" />
+        <Link href="/" className="flex flex-row justify-between items-center space-x-1">
+          <File className="w-8 h-8 mb-1 text-blue-600 dark:text-blue-400" />
           <TypographyH2 className="text-2xl font-bold text-gray-900 dark:text-white">
             ResumeAI
           </TypographyH2>
