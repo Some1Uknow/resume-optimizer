@@ -36,13 +36,14 @@ export default function HomePage() {
             </TypographyLead>
 
             <div className="flex space-x-4">
+              <Link href="/dashboard/builder">
               <Button
                 size="lg"
                 className="rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
               >
                 Start Building
                 <Rocket className="ml-2" />
-              </Button>
+              </Button></Link>
               <Button
                 variant="outline"
                 size="lg"
