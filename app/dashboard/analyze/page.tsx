@@ -25,40 +25,68 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Worker configuration
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+interface Analysis {
+  summary: string;
+  improvements: {
+    section: string;
+    current: string;
+    improved: string;
+    reason: string;
+  }[];
+  skills: {
+    technical: { name: string; level: number }[];
+    soft: string[];
+  };
+  experience: {
+    title: string;
+    company: string;
+    location: string;
+    duration: string;
+    highlights: string[];
+  }[];
+  education: {
+    degree: string;
+    school: string;
+    location: string;
+    year: string;
+    achievements: string[];
+  }[];
+  certifications: string[];
+  languages: { name: string; level: string }[];
+}
 
 // Dummy analysis data
 const DUMMY_ANALYSIS = {
   summary:
     "Experienced software engineer with 5+ years of expertise in full-stack development. Strong background in React, Node.js, and cloud technologies. Proven track record of delivering scalable solutions and leading engineering teams.",
-    improvements: [
-      {
-        section: "Summary",
-        current: "Experienced software engineer with 5+ years of expertise...",
-        improved: "Dynamic full-stack engineer with proven track record of delivering high-impact solutions...",
-        reason: "More impactful opening that emphasizes results over experience"
-      },
-      {
-        section: "Technical Skills",
-        current: "Listed without context",
-        improved: "Technologies with project impact metrics",
-        reason: "Quantify impact of technical skills with specific achievements"
-      },
-      {
-        section: "Experience",
-        current: "Led a team of 5 developers...",
-        improved: "Spearheaded a team of 5 developers, delivering 40% performance improvement...",
-        reason: "Emphasizes leadership impact with specific metrics"
-      }
-    ],
-    skills: {
+  improvements: [
+    {
+      section: "Summary",
+      current: "Experienced software engineer with 5+ years of expertise...",
+      improved:
+        "Dynamic full-stack engineer with proven track record of delivering high-impact solutions...",
+      reason: "More impactful opening that emphasizes results over experience",
+    },
+    {
+      section: "Technical Skills",
+      current: "Listed without context",
+      improved: "Technologies with project impact metrics",
+      reason: "Quantify impact of technical skills with specific achievements",
+    },
+    {
+      section: "Experience",
+      current: "Led a team of 5 developers...",
+      improved:
+        "Spearheaded a team of 5 developers, delivering 40% performance improvement...",
+      reason: "Emphasizes leadership impact with specific metrics",
+    },
+  ],
+  skills: {
     technical: [
       { name: "React", level: 95 },
       { name: "TypeScript", level: 90 },
@@ -137,11 +165,13 @@ export default function ResumePreviewer() {
   const [scale, setScale] = useState(1.0);
   const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
-  const [analysis, setAnalysis] = useState(null);
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [showImprovedVersion, setShowImprovedVersion] = useState(false);
   // File upload handler
-  const handleFileUpload = async (event: { target: { files: any[]; }; }) => {
-    const uploadedFile = event.target.files[0];
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       if (!uploadedFile.type.includes("pdf")) {
         alert("Please upload a PDF file");
@@ -156,22 +186,28 @@ export default function ResumePreviewer() {
 
       // Create object URL for the PDF viewer
       const fileUrl = URL.createObjectURL(uploadedFile);
+      // @ts-ignore
       setFile(fileUrl);
+      // @ts-ignore
       setRawFile(uploadedFile);
 
       // Simulate API delay
       setTimeout(() => {
-        setAnalysis(DUMMY_ANALYSIS);
+        setAnalysis(DUMMY_ANALYSIS as Analysis);
         setAnalyzing(false);
       }, 2000);
     }
   };
 
-  const onDocumentLoadSuccess = useCallback(({ numPages }) => {
-    setNumPages(numPages);
-    setPageNumber(1);
-    setLoading(false);
-  }, []);
+  const onDocumentLoadSuccess = useCallback(
+    ({ numPages }: { numPages: number }) => {
+      // @ts-ignore
+      setNumPages(numPages);
+      setPageNumber(1);
+      setLoading(false);
+    },
+    []
+  );
 
   useEffect(() => {
     return () => {
@@ -188,7 +224,7 @@ export default function ResumePreviewer() {
           <Wand2 className="h-5 w-5 text-purple-500" />
           Suggested Improvements
         </h3>
-        {analysis.improvements.map((improvement: { section: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; current: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; improved: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; reason: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, index: React.Key | null | undefined) => (
+        {analysis?.improvements.map((improvement, index) => (
           <Alert key={index} className="relative">
             <AlertTriangle className="h-5 w-5 text-yellow-500" />
             <AlertTitle className="text-sm font-semibold">
@@ -198,7 +234,9 @@ export default function ResumePreviewer() {
               <div className="text-sm space-y-1">
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="h-4 w-4 text-yellow-500 mt-1 flex-shrink-0" />
-                  <span className="text-muted-foreground">{improvement.current}</span>
+                  <span className="text-muted-foreground">
+                    {improvement.current}
+                  </span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
@@ -211,10 +249,7 @@ export default function ResumePreviewer() {
             </AlertDescription>
           </Alert>
         ))}
-        <Button 
-          className="w-full"
-          onClick={() => setShowImprovedVersion(true)}
-        >
+        <Button className="w-full" onClick={() => setShowImprovedVersion(true)}>
           <Wand2 className="h-4 w-4 mr-2" />
           Get Improved Resume
         </Button>
@@ -242,11 +277,10 @@ export default function ResumePreviewer() {
       );
     }
 
-
     return (
       <ScrollArea className="pr-4 h-[calc(100vh-250px)]">
         <div className="space-y-6">
-        <ImprovementSection />
+          <ImprovementSection />
           {/* Summary Section */}
           <div className="bg-muted/50 p-4 rounded-lg">
             <p className="text-sm leading-relaxed">{analysis.summary}</p>
@@ -259,15 +293,49 @@ export default function ResumePreviewer() {
               Technical Skills
             </h3>
             <div className="space-y-3">
-              {analysis.skills.technical.map((skill: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; level: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; }, index: React.Key | null | undefined) => (
-                <div key={index} className="space-y-1">
-                  <div className="flex justify-between text-sm">
-                    <span>{skill.name}</span>
-                    <span>{skill.level}%</span>
+              {analysis.skills.technical.map(
+                (
+                  skill: {
+                    name:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    level:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                  },
+                  index: React.Key | null | undefined
+                ) => (
+                  <div key={index} className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span>{skill.name}</span>
+                      <span>{skill.level}%</span>
+                    </div>
+                    {/* @ts-ignore */}
+                    <Progress value={skill.level} className="h-2" />
                   </div>
-                  <Progress value={skill.level} className="h-2" />
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
 
@@ -275,14 +343,32 @@ export default function ResumePreviewer() {
           <div>
             <h3 className="text-lg font-semibold mb-3">Soft Skills</h3>
             <div className="flex flex-wrap gap-2">
-              {analysis.skills.soft.map((skill: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined, index: React.Key | null | undefined) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
-                >
-                  {skill}
-                </span>
-              ))}
+              {analysis.skills.soft.map(
+                (
+                  skill:
+                    | string
+                    | number
+                    | bigint
+                    | boolean
+                    | React.ReactElement<
+                        any,
+                        string | React.JSXElementConstructor<any>
+                      >
+                    | Iterable<React.ReactNode>
+                    | React.ReactPortal
+                    | Promise<React.AwaitedReactNode>
+                    | null
+                    | undefined,
+                  index: React.Key | null | undefined
+                ) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                  >
+                    {skill}
+                  </span>
+                )
+              )}
             </div>
           </div>
 
@@ -293,26 +379,113 @@ export default function ResumePreviewer() {
               Professional Experience
             </h3>
             <div className="space-y-6">
-              {analysis.experience.map((exp: { title: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; duration: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; company: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; location: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; highlights: any[]; }, index: React.Key | null | undefined) => (
-                <div key={index} className="border-l-2 border-primary/30 pl-4">
-                  <div className="flex justify-between items-start">
-                    <h4 className="font-medium">{exp.title}</h4>
-                    <span className="text-sm text-muted-foreground">
-                      {exp.duration}
-                    </span>
+              {analysis.experience.map(
+                (
+                  exp: {
+                    title:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    duration:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    company:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    location:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    highlights: any[];
+                  },
+                  index: React.Key | null | undefined
+                ) => (
+                  <div
+                    key={index}
+                    className="border-l-2 border-primary/30 pl-4"
+                  >
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-medium">{exp.title}</h4>
+                      <span className="text-sm text-muted-foreground">
+                        {exp.duration}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {exp.company} • {exp.location}
+                    </p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {exp.highlights.map(
+                        (
+                          highlight:
+                            | string
+                            | number
+                            | bigint
+                            | boolean
+                            | React.ReactElement<
+                                any,
+                                string | React.JSXElementConstructor<any>
+                              >
+                            | Iterable<React.ReactNode>
+                            | React.ReactPortal
+                            | Promise<React.AwaitedReactNode>
+                            | null
+                            | undefined,
+                          idx: React.Key | null | undefined
+                        ) => (
+                          <li
+                            key={idx}
+                            className="text-sm text-muted-foreground"
+                          >
+                            {highlight}
+                          </li>
+                        )
+                      )}
+                    </ul>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {exp.company} • {exp.location}
-                  </p>
-                  <ul className="list-disc list-inside space-y-1">
-                    {exp.highlights.map((highlight: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined, idx: React.Key | null | undefined) => (
-                      <li key={idx} className="text-sm text-muted-foreground">
-                        {highlight}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
 
@@ -323,24 +496,108 @@ export default function ResumePreviewer() {
               Education
             </h3>
             <div className="space-y-4">
-              {analysis.education.map((edu: { degree: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; year: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; school: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; location: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; achievements: any[]; }, index: React.Key | null | undefined) => (
-                <div key={index} className="border-l-2 border-primary/30 pl-4">
-                  <div className="flex justify-between items-start">
-                    <h4 className="font-medium">{edu.degree}</h4>
-                    <span className="text-sm text-muted-foreground">
-                      {edu.year}
-                    </span>
+              {analysis.education.map(
+                (
+                  edu: {
+                    degree:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    year:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    school:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    location:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    achievements: any[];
+                  },
+                  index: React.Key | null | undefined
+                ) => (
+                  <div
+                    key={index}
+                    className="border-l-2 border-primary/30 pl-4"
+                  >
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-medium">{edu.degree}</h4>
+                      <span className="text-sm text-muted-foreground">
+                        {edu.year}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {edu.school} • {edu.location}
+                    </p>
+                    <ul className="mt-1 text-sm text-muted-foreground">
+                      {edu.achievements.map(
+                        (
+                          achievement:
+                            | string
+                            | number
+                            | bigint
+                            | boolean
+                            | React.ReactElement<
+                                any,
+                                string | React.JSXElementConstructor<any>
+                              >
+                            | Iterable<React.ReactNode>
+                            | React.ReactPortal
+                            | Promise<React.AwaitedReactNode>
+                            | null
+                            | undefined,
+                          idx: React.Key | null | undefined
+                        ) => (
+                          <li key={idx}>{achievement}</li>
+                        )
+                      )}
+                    </ul>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    {edu.school} • {edu.location}
-                  </p>
-                  <ul className="mt-1 text-sm text-muted-foreground">
-                    {edu.achievements.map((achievement: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined, idx: React.Key | null | undefined) => (
-                      <li key={idx}>{achievement}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
 
@@ -351,12 +608,30 @@ export default function ResumePreviewer() {
               Certifications
             </h3>
             <ul className="space-y-2">
-              {analysis.certifications.map((cert: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined, index: React.Key | null | undefined) => (
-                <li key={index} className="flex items-center gap-2 text-sm">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                  {cert}
-                </li>
-              ))}
+              {analysis.certifications.map(
+                (
+                  cert:
+                    | string
+                    | number
+                    | bigint
+                    | boolean
+                    | React.ReactElement<
+                        any,
+                        string | React.JSXElementConstructor<any>
+                      >
+                    | Iterable<React.ReactNode>
+                    | React.ReactPortal
+                    | Promise<React.AwaitedReactNode>
+                    | null
+                    | undefined,
+                  index: React.Key | null | undefined
+                ) => (
+                  <li key={index} className="flex items-center gap-2 text-sm">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                    {cert}
+                  </li>
+                )
+              )}
             </ul>
           </div>
 
@@ -364,12 +639,46 @@ export default function ResumePreviewer() {
           <div className="pb-6">
             <h3 className="text-lg font-semibold mb-3">Languages</h3>
             <div className="space-y-2">
-              {analysis.languages.map((lang: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; level: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, index: React.Key | null | undefined) => (
-                <div key={index} className="flex justify-between text-sm">
-                  <span>{lang.name}</span>
-                  <span className="text-muted-foreground">{lang.level}</span>
-                </div>
-              ))}
+              {analysis.languages.map(
+                (
+                  lang: {
+                    name:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                    level:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                          any,
+                          string | React.JSXElementConstructor<any>
+                        >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
+                  },
+                  index: React.Key | null | undefined
+                ) => (
+                  <div key={index} className="flex justify-between text-sm">
+                    <span>{lang.name}</span>
+                    <span className="text-muted-foreground">{lang.level}</span>
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>
