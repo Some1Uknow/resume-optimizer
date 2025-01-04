@@ -11,13 +11,11 @@ import {
   Upload,
   Loader2,
   Star,
-  Calendar,
   GraduationCap,
   Briefcase,
   Award,
   AlertTriangle,
   CheckCircle2,
-  ArrowUpCircle,
   Wand2,
 } from "lucide-react";
 
@@ -159,7 +157,6 @@ const DUMMY_ANALYSIS = {
 
 export default function ResumePreviewer() {
   const [file, setFile] = useState(null);
-  const [rawFile, setRawFile] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);

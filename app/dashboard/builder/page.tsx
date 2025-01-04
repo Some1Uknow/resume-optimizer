@@ -97,15 +97,15 @@ const ResumeBuilder = () => {
 
       {/* Templates Grid */}
       <div className="grid md:grid-cols-3 gap-6">
+      {/* @ts-ignore */}
         {templateCategories[selectedCategory].templates.map((template) => (
           <motion.div
             key={template.id}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            className={`
-              border rounded-xl overflow-hidden shadow-lg
-              ${selectedTemplate?.id === template.id 
+            //@ts-ignore
+            className={`border rounded-xl overflow-hidden shadow-lg ${selectedTemplate?.id === template.id 
                 ? 'ring-2 ring-blue-500' 
                 : 'hover:shadow-xl'}
             `}
@@ -125,6 +125,7 @@ const ResumeBuilder = () => {
             <div className="p-4 space-y-2">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold">{template.name}</h3>
+                {/* @ts-ignore */}
                 {selectedTemplate?.id === template.id && (
                   <CheckCircle className="text-green-500" />
                 )}

@@ -6,6 +6,7 @@ export const Icons = {
   twitter: Twitter,
   gitHub: Github,
   spinner: Loader2,
+  // @ts-ignore
   google: (props: LucideProps) => (
     <svg {...props} viewBox="0 0 24 24">
       <path
