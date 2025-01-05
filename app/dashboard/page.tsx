@@ -2,11 +2,9 @@
 import { Button } from "@/components/ui/button"
 import {
   Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+ 
 } from "@/components/ui/card"
-import { FileText, Plus, BarChart, Pencil, Copy, Download, Trash2, Clock, Tag } from 'lucide-react'
+import {  Plus,  Pencil, Copy, Download, Trash2, Clock, Tag } from 'lucide-react'
 
 const resumes = [
   {

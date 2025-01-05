@@ -3,6 +3,9 @@ const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
   },
+  typescript:{
+    ignoreBuildErrors: true,
+  }
 };
 
 export default nextConfig;

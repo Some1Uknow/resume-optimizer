@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Rocket, FileText, Edit3, Target, Star, File } from "lucide-react";
+import { Rocket, FileText, Edit3, Target, Star } from "lucide-react";
 import {
   TypographyH1,
   TypographyLead,
@@ -32,7 +32,9 @@ export default function HomePage() {
             <TypographyLead className="text-xl text-gray-600 dark:text-gray-300 mb-10">
               Build, optimize, and tailor your resume for any job with our
               advanced AI-driven platform. From creation to job-specific
-              enhancement, we've got you covered.
+              enhancement, we`
+                &apos;
+              `ve got you covered.
             </TypographyLead>
 
             <div className="flex space-x-4">
