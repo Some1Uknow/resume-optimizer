@@ -34,7 +34,7 @@ const Hero = () => {
         {/* Right Content - Resume Preview */}
         <div className="relative h-[600px] w-full">
           <Image
-            src="/image 1.png"
+            src="/template-1.png"
             alt="Resume Preview"
             fill
             className="object-contain"
