@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText, Settings, User, PenTool, BarChart, LogOut } from "lucide-react";
+import { FileText, PenTool, BarChart, LogOut } from "lucide-react";
 
 const sidebarItems = [
   { icon: FileText, label: "My Resumes", href: "/dashboard" },
