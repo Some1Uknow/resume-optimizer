@@ -37,7 +37,7 @@ const Hero = () => {
             src="/template-1.png"
             alt="Resume Preview"
             fill
-            className="object-contain"
+            className="object-contain shadow-lg"
             priority
           />
         </div>
