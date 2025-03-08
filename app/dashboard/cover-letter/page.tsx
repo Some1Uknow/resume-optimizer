@@ -46,39 +46,39 @@ Based on the job description for ${
   };
 
   return (
-    <div className="grid grid-cols-2 gap-8 p-8 bg-white">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-background">
       {/* Left Half: Cover Letter Generator */}
-      <div className="space-y-6 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+      <div className="space-y-6 bg-card p-6 rounded-lg border border-border shadow-sm">
         <div className="space-y-2">
-          <h2 className="text-2xl font-semibold text-blue-600">
+          <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
             Create a Tailored Cover Letter
           </h2>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Generate a personalized cover letter using AI
           </p>
         </div>
 
         {/* Job Description Input */}
         <div className="space-y-3">
-          <Label className="text-sm font-medium text-gray-700">
+          <Label className="text-sm font-medium text-foreground">
             Job Description
           </Label>
           <Textarea
             placeholder="Paste the full job description here..."
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
-            className="min-h-[200px] resize-none border-gray-300 bg-gray-200 text-black"
+            className="min-h-[200px] resize-none bg-background border-border text-foreground"
           />
         </div>
 
         {/* Resume Selection */}
         <div className="space-y-3">
-          <Label className="text-sm font-medium text-gray-700">
+          <Label className="text-sm font-medium text-foreground">
             Select Resume
           </Label>
           <div className="flex gap-4">
             <Select onValueChange={setSelectedResume}>
-              <SelectTrigger className="border-gray-300 bg-gray-200 text-black">
+              <SelectTrigger className="border-border bg-background text-foreground">
                 <SelectValue placeholder="Choose a resume" />
               </SelectTrigger>
               <SelectContent>
@@ -89,7 +89,7 @@ Based on the job description for ${
                 ))}
               </SelectContent>
             </Select>
-            <Button variant="outline" className="flex gap-2 border-gray-300 bg-gray-200 text-black">
+            <Button variant="outline" className="flex gap-2 border-border bg-background text-foreground">
               <Upload className="h-4 w-4" /> Upload Resume
             </Button>
           </div>
@@ -99,17 +99,17 @@ Based on the job description for ${
         <Button
           onClick={handleGenerateCoverLetter}
           disabled={!jobDescription || !selectedResume}
-          className="w-full bg-blue-600 text-white hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
         >
           <Wand className="mr-2 h-5 w-5" /> Generate Cover Letter
         </Button>
       </div>
 
       {/* Right Half: Cover Letter Preview */}
-      <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+      <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
         {generatedCoverLetter ? (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-blue-600">
+            <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
               Generated Cover Letter
             </h3>
 
@@ -117,11 +117,11 @@ Based on the job description for ${
               <Textarea
                 value={generatedCoverLetter}
                 onChange={(e) => setGeneratedCoverLetter(e.target.value)}
-                className="min-h-[500px] resize-none border-gray-300"
+                className="min-h-[500px] resize-none border-border bg-background text-foreground"
               />
             ) : (
-              <div className="bg-gray-50 p-4 rounded -md overflow-y-auto max-h-[500px]">
-                <pre className="whitespace-pre-wrap text-gray-700">
+              <div className="bg-background/50 dark:bg-background/20 p-4 rounded-md overflow-y-auto max-h-[500px]">
+                <pre className="whitespace-pre-wrap text-foreground">
                   {generatedCoverLetter}
                 </pre>
               </div>
@@ -131,14 +131,14 @@ Based on the job description for ${
               <Button
                 variant="outline"
                 onClick={() => setIsEditing(!isEditing)}
-                className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-100"
+                className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-100/50 dark:border-blue-500 dark:text-blue-400 dark:hover:bg-blue-950/50"
               >
                 <Edit className="mr-2 h-4 w-4" />
                 {isEditing ? "Save Changes" : "Edit Letter"}
               </Button>
               <Button
                 onClick={handleDownloadCoverLetter}
-                className="flex-1 bg-blue-600 text-white hover:bg-blue-700"
+                className="flex-1 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
               >
                 <Download className="mr-2 h-4 w-4" />
                 Download Letter
@@ -146,7 +146,7 @@ Based on the job description for ${
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-500">
+          <div className="flex items-center justify-center h-full text-muted-foreground">
             <p>Your generated cover letter will appear here</p>
           </div>
         )}

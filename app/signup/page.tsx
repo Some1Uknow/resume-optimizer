@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/icons"
+import Link from "next/link"
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -60,19 +61,20 @@ export default function SignUp() {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" disabled={isLoading}>
-              <Icons.gitHub className="mr-2 h-4 w-4" />
-              Github
-            </Button>
-            <Button variant="outline" disabled={isLoading}>
-              <Icons.google className="mr-2 h-4 w-4" />
+          <div className="w-full space-y-2">
+            <Button className="w-full" variant="outline" disabled={isLoading}>
+              <Icons.google className="mr-2 h-4 w-max" />
               Google
             </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link href="/signin" className="font-medium text-primary hover:underline">
+                Login
+              </Link>
+            </p>
           </div>
         </div>
       </main>
     </div>
   )
 }
-

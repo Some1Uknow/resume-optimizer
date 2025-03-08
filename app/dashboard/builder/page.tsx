@@ -75,19 +75,19 @@ const ResumeBuilder = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   return (
-    <div className="bg-white p-6 space-y-6">
-      <div className="flex items-center space-x-4 border-b border-gray-100 pb-4">
+    <div className="bg-background p-6 space-y-6">
+      <div className="flex items-center space-x-4 border-b border-border pb-4 overflow-x-auto">
         {Object.entries(templateCategories).map(([category, { icon: Icon }]) => (
           <Button
             key={category}
             onClick={() => setSelectedCategory(category)}
             variant="ghost"
             className={`
-              flex items-center space-x-2 px-4 py-2 bg-blue-500 rounded-lg transition-all
+              flex items-center space-x-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap
               ${
                 selectedCategory === category
-                  ? "bg-blue-50 text-blue-500"
-                  : "hover:bg-blue-700"
+                  ? "bg-blue-50 text-blue-500 dark:bg-blue-950/50 dark:text-blue-400"
+                  : "hover:bg-accent hover:text-accent-foreground"
               }
             `}
           >
@@ -104,9 +104,9 @@ const ResumeBuilder = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            className={`border border-gray-100 rounded-xl overflow-hidden shadow-lg ${
+            className={`border border-border rounded-xl overflow-hidden shadow-lg bg-card ${
               selectedTemplate?.id === template.id
-                ? "ring-2 ring-blue-500"
+                ? "ring-2 ring-blue-500 dark:ring-blue-400"
                 : "hover:shadow-xl"
             }`}
             onClick={() => setSelectedTemplate(template)}
@@ -122,15 +122,15 @@ const ResumeBuilder = () => {
 
             <div className="p-4 space-y-2">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-foreground">
                   {template.name}
                 </h3>
                 {selectedTemplate?.id === template.id && (
-                  <CheckCircle className="text-blue-500" />
+                  <CheckCircle className="text-blue-500 dark:text-blue-400" />
                 )}
               </div>
 
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-muted-foreground space-y-1">
                 <p>Suitable for: {template.suitableFor}</p>
                 <p>Complexity: {template.complexity}</p>
               </div>
@@ -142,13 +142,13 @@ const ResumeBuilder = () => {
       <div className="flex justify-end space-x-4 mt-6">
         <Button
           variant="outline"
-          className="border-gray-200 hover:bg-gray-50"
+          className="border-border hover:bg-accent hover:text-accent-foreground"
           onClick={() => setSelectedTemplate(null)}
         >
           Cancel
         </Button>
         <Button
-          className={`bg-blue-500 hover:bg-blue-600 text-white ${
+          className={`bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white ${
             !selectedTemplate && "opacity-50 cursor-not-allowed"
           }`}
           disabled={!selectedTemplate}

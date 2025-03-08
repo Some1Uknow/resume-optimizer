@@ -1,16 +1,18 @@
-import React from 'react';
-import Navbar from '@/components/Navbar';
-import Hero from '@/components/Hero';
-import FeatureSection from '@/components/FeatureSection';
-import TemplatesSection from '@/components/TemplatesSection';
+import React from "react";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import FeatureSection from "@/components/FeatureSection";
+import TemplatesSection from "@/components/TemplatesSection";
+import { Header } from "@/components/header";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
-      <Navbar />
+    <>
+      {/* <Navbar /> */}
+      <Header/>
       <Hero />
       <FeatureSection />
       <TemplatesSection />
-    </main>
+    </>
   );
 }

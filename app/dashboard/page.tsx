@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Plus, Pencil, Copy, Download, Trash2, Clock, Tag } from "lucide-react";
+
 const resumes = [
   {
     id: 1,
@@ -36,12 +37,12 @@ export default function Dashboard() {
   const handleDelete = (id: number) => console.log("Delete resume:", id);
 
   return (
-    <div className="mx-auto p-8 bg-white">
+    <div className="mx-auto p-8 bg-background">
       <div className="flex items-center justify-between mb-10">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">
           My Resumes
         </h2>
-        <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+        <Button className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white">
           <Plus className="mr-2 h-4 w-4" /> New Resume
         </Button>
       </div>
@@ -50,10 +51,10 @@ export default function Dashboard() {
         {resumes.map((resume) => (
           <Card
             key={resume.id}
-            className="bg-white hover:shadow-lg transition-shadow overflow-hidden border border-gray-100"
+            className="bg-card hover:shadow-lg transition-shadow overflow-hidden border border-border"
           >
-            <div className="flex h-[460px]">
-              <div className="w-[55%] border-r border-gray-100">
+            <div className="flex flex-col md:flex-row h-auto md:h-[460px]">
+              <div className="w-full md:w-[55%] border-b md:border-b-0 md:border-r border-border">
                 <img
                   src={resume.previewUrl}
                   alt={`Preview of ${resume.name}`}
@@ -61,15 +62,15 @@ export default function Dashboard() {
                 />
               </div>
 
-              <div className="w-[45%] flex flex-col">
-                <div className="p-8 border-b border-gray-100">
-                  <h3 className="text-sm font-medium text-blue-500 mb-3">
+              <div className="w-full md:w-[45%] flex flex-col">
+                <div className="p-8 border-b border-border">
+                  <h3 className="text-sm font-medium text-blue-500 dark:text-blue-400 mb-3">
                     {resume.name}
                   </h3>
-                  <p className="text-base font-medium text-gray-900 mb-4">
+                  <p className="text-base font-medium text-foreground mb-4">
                     {resume.displayName}
                   </p>
-                  <div className="flex items-center gap-2 mb-6 text-sm text-gray-500">
+                  <div className="flex items-center gap-2 mb-6 text-sm text-muted-foreground">
                     <Clock className="h-4 w-4" />
                     <span>Edited {resume.lastEdited}</span>
                   </div>
@@ -100,13 +101,13 @@ export default function Dashboard() {
                       icon: Trash2,
                       label: "Delete",
                       handler: handleDelete,
-                      className: "text-red-600",
+                      className: "text-red-600 dark:text-red-400",
                     },
                   ].map(({ icon: Icon, label, handler, className = "" }) => (
                     <Button
                       key={label}
                       variant="ghost"
-                      className={`flex items-center gap-3 justify-start px-8 py-3 text-sm text-black ${className}`}
+                      className={`flex items-center gap-3 justify-start px-8 py-3 text-sm text-foreground ${className}`}
                       onClick={() => handler(resume.id)}
                     >
                       <Icon className="h-4 w-4" />

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, PenTool, BarChart, LogOut } from "lucide-react";
+import { ModeToggle } from "./mode-toggle";
 
 const sidebarItems = [
   { icon: FileText, label: "My Resumes", href: "/dashboard" },
@@ -12,14 +13,15 @@ const sidebarItems = [
 
 export function Sidebar() {
   return (
-    <div className="hidden max-h-screen bg-white lg:block w-72 shadow-lg rounded-lg mx-4 my-4">
+    <div className="h-screen bg-card dark:bg-card lg:block w-72 shadow-lg rounded-lg mx-4 my-4 border border-border">
       <div className="flex h-full max-h-screen flex-col gap-2">
         {/* Header */}
-        <div className="flex h-[60px] items-center  px-6">
+        <div className="flex h-[60px] items-center justify-between px-6 border-b border-border">
           <Link className="flex items-center gap-2 font-semibold" href="/dashboard">
-            <FileText className="h-6 w-6 text-blue-600" />
-            <span className="text-gray-800">ResumeAI</span>
+            <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <span className="text-foreground">ResumeAI</span>
           </Link>
+          <ModeToggle />
         </div>
 
         {/* Scrollable Menu Items */}
@@ -29,7 +31,7 @@ export function Sidebar() {
               <Button
                 key={item.label}
                 asChild
-                className="w-full justify-start px-4 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                className="w-full justify-start px-4 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
                 variant="ghost"
               >
                 <Link href={item.href}>
@@ -42,10 +44,10 @@ export function Sidebar() {
         </ScrollArea>
 
         {/* Logout Button */}
-        <div className="mt-auto p-4">
+        <div className="mt-auto p-4 border-t border-border">
           <Button
             variant="ghost"
-            className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-100 transition-colors duration-200"
+            className="w-full justify-start text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors duration-200"
           >
             <LogOut className="mr-2 h-4 w-4" />
             Log out

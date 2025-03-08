@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from './mode-toggle';
 
 const Navbar = () => {
   return (
@@ -48,6 +49,7 @@ const Navbar = () => {
           </Button>
         </div>
       </div>
+      <ModeToggle/>
     </nav>
   );
 };

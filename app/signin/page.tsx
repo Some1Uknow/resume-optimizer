@@ -62,19 +62,20 @@ export default function Login() {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" disabled={isLoading}>
-              <Icons.gitHub className="mr-2 h-4 w-4" />
-              Github
-            </Button>
-            <Button variant="outline" disabled={isLoading}>
+          <div className="w-full space-y-2">
+            <Button className="w-full" variant="outline" disabled={isLoading}>
               <Icons.google className="mr-2 h-4 w-4" />
               Google
             </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              Don't have an account?{' '}
+              <Link href="/signup" className="font-medium text-primary hover:underline">
+                Create here
+              </Link>
+            </p>
           </div>
         </div>
       </main>
     </div>
   )
 }
-
