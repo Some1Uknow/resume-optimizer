@@ -13,19 +13,19 @@ const sidebarItems = [
 
 export function Sidebar() {
   return (
-    <div className="h-screen bg-card dark:bg-card lg:block w-72 shadow-lg rounded-lg mx-4 my-4 border border-border">
+    <div className="h-screen bg-card dark:bg-card lg:block w-72 shadow-lg rounded-lg border border-border">
       <div className="flex h-full max-h-screen flex-col gap-2">
         {/* Header */}
         <div className="flex h-[60px] items-center justify-between px-6 border-b border-border">
           <Link className="flex items-center gap-2 font-semibold" href="/dashboard">
             <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-            <span className="text-foreground">ResumeAI</span>
+            <span className="text-foreground">ResumeMax</span>
           </Link>
           <ModeToggle />
         </div>
 
         {/* Scrollable Menu Items */}
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 overflow-y-auto">
           <div className="space-y-2 py-4 px-2">
             {sidebarItems.map((item) => (
               <Button

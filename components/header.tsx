@@ -11,7 +11,7 @@ export function Header() {
         <Link href="/" className="flex flex-row justify-between items-center space-x-1">
           <File className="w-8 h-8 mb-1 text-blue-600 dark:text-blue-400" />
           <TypographyH2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            ResumeAI
+            ResumeMax
           </TypographyH2>
         </Link>
 

@@ -68,14 +68,12 @@ const Hero = () => {
 
         {/* Right Content - Resume Preview */}
         <div className="lg:col-span-6 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl -z-10 blur-xl opacity-70"></div>
-          <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
           <Image
             src="/template-1.png"
             alt="Resume Preview"
             width={800}
             height={1400}
-            className="object-contain"
+            className="object-contain rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-blue-200/50 dark:border-blue-900/50 transform transition-transform hover:scale-[1.02] duration-300"
             priority
           />
         </div>

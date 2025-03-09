@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "ResumeAI - AI-Powered Resume Builder",
+  title: "ResumeMax - AI-Powered Resume Builder",
   description: "Create ATS-optimized resumes with AI assistance",
 }
 

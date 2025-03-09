@@ -1,8 +1,8 @@
-# ResumeAI - AI-Powered Resume Builder
+# ResumeMax - AI-Powered Resume Builder
 
 ## Description
 
-ResumeAI is an advanced, AI-powered resume optimization platform designed to help job seekers create professional, ATS-friendly resumes. The application leverages modern web technologies to provide an intuitive, feature-rich resume building and optimization experience.
+ResumeMax is an advanced, AI-powered resume optimization platform designed to help job seekers create professional, ATS-friendly resumes. The application leverages modern web technologies to provide an intuitive, feature-rich resume building and optimization experience.
 
 ## Key Features
 
