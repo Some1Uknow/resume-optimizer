@@ -60,9 +60,9 @@ const TemplatesSection = () => {
   return (
     <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
       {/* Background elements */}
-      <div className="absolute top-1/3 right-0 -mr-24 w-64 h-64 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-70 z-0"></div>
+      {/* <div className="absolute top-1/3 right-0 -mr-24 w-64 h-64 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-70 z-0"></div>
       <div className="absolute bottom-1/3 left-0 -ml-24 w-64 h-64 bg-cyan-100 dark:bg-cyan-900/20 rounded-full blur-3xl opacity-70 z-0"></div>
-      
+       */}
       <div className="relative z-10 mb-16">
         <div className="text-center max-w-3xl mx-auto space-y-6">
           <div className="inline-block px-4 py-1.5 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 dark:from-blue-500/20 dark:to-cyan-500/20 rounded-full backdrop-blur-sm">

@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Image from "next/image";
 import { Plus, Pencil, Copy, Download, Trash2, Clock, Tag } from "lucide-react";
 
 const resumes = [
@@ -55,8 +56,10 @@ export default function Dashboard() {
           >
             <div className="flex flex-col md:flex-row h-auto md:h-[460px]">
               <div className="w-full md:w-[55%] border-b md:border-b-0 md:border-r border-border">
-                <img
+                <Image
                   src={resume.previewUrl}
+                  height={1600}
+                  width={900}
                   alt={`Preview of ${resume.name}`}
                   className="w-full h-full object-cover"
                 />

@@ -19,9 +19,9 @@ const FeatureSection = () => {
   return (
     <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
       {/* Background elements */}
-      <div className="absolute top-1/4 left-0 -ml-24 w-64 h-64 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-70 z-0"></div>
+      {/* <div className="absolute top-1/4 left-0 -ml-24 w-64 h-64 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-70 z-0"></div>
       <div className="absolute bottom-1/4 right-0 -mr-24 w-64 h-64 bg-cyan-100 dark:bg-cyan-900/20 rounded-full blur-3xl opacity-70 z-0"></div>
-      
+       */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
         {/* Left - Illustration */}
         <div className="lg:col-span-5 relative">
