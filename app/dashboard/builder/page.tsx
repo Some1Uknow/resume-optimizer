@@ -21,14 +21,14 @@ const templateCategories = {
         name: 'Corporate Standard', 
         suitableFor: 'Business Professionals',
         complexity: 'Medium',
-        image: '/templates/corporate-resume.png'
+        image: '/template-1.png'
       },
       { 
         id: 'executive', 
         name: 'Executive Profile', 
         suitableFor: 'Senior Managers',
         complexity: 'Complex',
-        image: '/templates/executive-resume.png'
+        image: '/template-2.png'
       }
     ]
   },
@@ -40,7 +40,7 @@ const templateCategories = {
         name: 'Creative Showcase', 
         suitableFor: 'Designers & Artists',
         complexity: 'High',
-        image: '/templates/creative-resume.png'
+        image: '/template-3.png'
       }
     ]
   },
@@ -52,7 +52,7 @@ const templateCategories = {
         name: 'Minimalist Approach', 
         suitableFor: 'Tech & Startup',
         complexity: 'Simple',
-        image: '/templates/minimal-resume.png'
+        image: '/template-4.png'
       }
     ]
   },
@@ -64,7 +64,7 @@ const templateCategories = {
         name: 'Academic Credentials', 
         suitableFor: 'Researchers & Scholars',
         complexity: 'Detailed',
-        image: '/templates/academic-resume.png'
+        image: '/template-5.png'
       }
     ]
   }
