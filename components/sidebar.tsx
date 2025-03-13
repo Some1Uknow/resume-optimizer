@@ -3,11 +3,16 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, PenTool, BarChart, LogOut } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
+import { signOut } from "next-auth/react";
 
 const sidebarItems = [
   { icon: FileText, label: "My Resumes", href: "/dashboard" },
   { icon: PenTool, label: "Resume Builder", href: "/dashboard/builder" },
-  { icon: FileText, label: "Cover Letter Generator", href: "/dashboard/cover-letter" },
+  {
+    icon: FileText,
+    label: "Cover Letter Generator",
+    href: "/dashboard/cover-letter",
+  },
   { icon: BarChart, label: "Analyze and Optimize", href: "/dashboard/analyze" },
 ];
 
@@ -17,7 +22,10 @@ export function Sidebar() {
       <div className="flex h-full max-h-screen flex-col gap-2">
         {/* Header */}
         <div className="flex h-[60px] items-center justify-between px-6 border-b border-border">
-          <Link className="flex items-center gap-2 font-semibold" href="/dashboard">
+          <Link
+            className="flex items-center gap-2 font-semibold"
+            href="/dashboard"
+          >
             <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             <span className="text-foreground">ResumeMax</span>
           </Link>
@@ -49,7 +57,10 @@ export function Sidebar() {
             variant="ghost"
             className="w-full justify-start text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors duration-200"
           >
-            <LogOut className="mr-2 h-4 w-4" />
+            <LogOut
+              onClick={() => signOut({ redirectTo: "/" })}
+              className="mr-2 h-4 w-4"
+            />
             Log out
           </Button>
         </div>

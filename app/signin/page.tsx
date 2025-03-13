@@ -1,23 +1,25 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Icons } from "@/components/icons"
-import Link from "next/link"
+import { useState } from "react";
+import { signIn } from "@/auth";
+import { Header } from "@/components/header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Icons } from "@/components/icons";
+import Link from "next/link";
+import GoogleSignIn from "@/components/GoogleButton";
 
 export default function Login() {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
+    event.preventDefault();
+    setIsLoading(true);
 
     setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+      setIsLoading(false);
+    }, 3000);
   }
 
   return (
@@ -34,7 +36,12 @@ export default function Login() {
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder="m@example.com" required type="email" />
+              <Input
+                id="email"
+                placeholder="m@example.com"
+                required
+                type="email"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -48,7 +55,10 @@ export default function Login() {
             </Button>
           </form>
           <div className="text-center text-sm">
-            <Link className="underline underline-offset-4 hover:text-primary" href="#">
+            <Link
+              className="underline underline-offset-4 hover:text-primary"
+              href="#"
+            >
               Forgot your password?
             </Link>
           </div>
@@ -63,13 +73,13 @@ export default function Login() {
             </div>
           </div>
           <div className="w-full space-y-2">
-            <Button className="w-full" variant="outline" disabled={isLoading}>
-              <Icons.google className="mr-2 h-4 w-4" />
-              Google
-            </Button>
+            <GoogleSignIn />
             <p className="text-center text-sm text-muted-foreground">
               Don`&apos;`t have an account?
-              <Link href="/signup" className="font-medium text-primary hover:underline">
+              <Link
+                href="/signup"
+                className="font-medium text-primary hover:underline"
+              >
                 Create here
               </Link>
             </p>
@@ -77,5 +87,5 @@ export default function Login() {
         </div>
       </main>
     </div>
-  )
+  );
 }
