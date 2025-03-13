@@ -16,22 +16,28 @@ const Navbar = () => {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             <Link 
-              href="/build-resume" 
+              href="/dashboard" 
               className="text-gray-700 hover:text-gray-900 transition-colors"
             >
               Build Resume
             </Link>
             <Link 
-              href="/templates" 
+              href="/dashboard/builder" 
               className="text-gray-700 hover:text-gray-900 transition-colors"
             >
               Templates
             </Link>
             <Link 
-              href="/ai-optimization" 
+              href="/dashboard/cover-letter" 
               className="text-gray-700 hover:text-gray-900 transition-colors"
             >
-              AI Optimization
+              Cover Letters
+            </Link>
+            <Link 
+              href="/dashboard/analyze" 
+              className="text-gray-700 hover:text-gray-900 transition-colors"
+            >
+             Optimizer
             </Link>
             <Link 
               href="/pricing" 

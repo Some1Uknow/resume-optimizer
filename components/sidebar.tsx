@@ -24,7 +24,7 @@ export async function Sidebar() {
   const session = await auth();
   if (!session) {
     redirect("/");
-    toast("User is not signed in");
+    toast.error("User is not signed in");
   }
   return (
     <div className="h-screen bg-card dark:bg-card lg:block w-72 shadow-lg rounded-lg border border-border">

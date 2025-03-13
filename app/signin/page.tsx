@@ -1,5 +1,3 @@
-
-import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +7,7 @@ import SignIn from "@/components/sign-in";
 export default function Login() { 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      {/* <Header /> */}
       <main className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-md space-y-6 px-4 md:px-6">
           <div className="space-y-2 text-center">

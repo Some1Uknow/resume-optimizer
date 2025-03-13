@@ -49,8 +49,8 @@ const PRICING_TIERS = [
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 py-4 px-4">
-      <div className="container mx-auto text-center mb-8">
+    <div className=" bg-white dark:bg-slate-900 py-4 px-4">
+      <div className=" mx-auto text-center mb-8">
         <TypographyH1 className="text-6xl font-bold py-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
           Unlock Your Career Potential
         </TypographyH1>

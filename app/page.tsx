@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       {/* <Navbar /> */}
-      <Header/>
+      {/* <Header/> */}
       <Hero />
       <FeatureSection />
       <TemplatesSection />

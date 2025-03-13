@@ -10,6 +10,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
 
 // ... templateCategories stays the same
 const templateCategories = {
@@ -73,6 +74,7 @@ const templateCategories = {
 const ResumeBuilder = () => {
   const [selectedCategory, setSelectedCategory] = useState("professional");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const router = useRouter();
 
   return (
     <div className="bg-background p-6 space-y-6">
@@ -149,9 +151,14 @@ const ResumeBuilder = () => {
         </Button>
         <Button
           className={`bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white ${
-            !selectedTemplate && "opacity-50 cursor-not-allowed"
+            !selectedTemplate && 'opacity-50 cursor-not-allowed'
           }`}
           disabled={!selectedTemplate}
+          onClick={() => {
+            if (selectedTemplate) {
+              router.push(`/dashboard/builder/${selectedTemplate.id}`);
+            }
+          }}
         >
           Create Resume
         </Button>

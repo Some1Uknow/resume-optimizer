@@ -17,9 +17,10 @@ export function Header() {
 
         <div className="hidden md:flex space-x-6 items-center">
           {[
-            { label: "Build Resume", href: "/builder" },
-            { label: "Templates", href: "/templates" },
-            { label: "AI Optimization", href: "/optimize" },
+            { label: "Build Resume", href: "/dashboard" },
+            { label: "Templates", href: "/dashboard/builder" },
+            { label: "Cover Letter", href: "/dashboard/cover-letter" },
+            { label: "Optimizer", href: "/dashboard/analyze" },
             { label: "Pricing", href: "/pricing" },
           ].map((link) => (
             <Link
@@ -30,9 +31,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <Button size="lg" className="rounded-full">
-            Get Started
-          </Button>
           <ModeToggle />
         </div>
       </div>
