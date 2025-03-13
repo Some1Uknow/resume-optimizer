@@ -1,4 +1,3 @@
-"use client";
 import { Sidebar } from "@/components/sidebar";
 
 export default function DashboardLayout({
@@ -7,7 +6,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-row bg-background h-screen">
+    <div className="flex flex-row bg-background h-screen" suppressHydrationWarning>
       <div className="sticky top-0 h-screen overflow-y-auto">
         <Sidebar />
       </div>

@@ -1,4 +1,3 @@
-
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import SignIn from "@/components/sign-in";
 
-export default function Login() { 
+export default async function Login() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />

@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, PenTool, BarChart, LogOut } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
-import { signOut } from "next-auth/react";
+import { SignOut } from "./sign-out";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const sidebarItems = [
   { icon: FileText, label: "My Resumes", href: "/dashboard" },
@@ -16,7 +20,12 @@ const sidebarItems = [
   { icon: BarChart, label: "Analyze and Optimize", href: "/dashboard/analyze" },
 ];
 
-export function Sidebar() {
+export async function Sidebar() {
+  const session = await auth();
+  if (!session) {
+    redirect("/");
+    toast("User is not signed in");
+  }
   return (
     <div className="h-screen bg-card dark:bg-card lg:block w-72 shadow-lg rounded-lg border border-border">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -51,18 +60,28 @@ export function Sidebar() {
           </div>
         </ScrollArea>
 
+        {/* User Card */}
+        <div className="flex items-center gap-3 px-4 py-3 border-t border-border">
+          <Avatar className="h-9 w-9">
+            <AvatarImage src={session.user?.image ?? ""} />
+            <AvatarFallback>
+              {session.user?.name
+                ?.split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <p className="font-medium text-sm">{session.user?.name}</p>
+            <p className="text-xs text-muted-foreground">
+              {session.user?.email}
+            </p>
+          </div>
+        </div>
+
         {/* Logout Button */}
         <div className="mt-auto p-4 border-t border-border">
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors duration-200"
-          >
-            <LogOut
-              onClick={() => signOut({ redirectTo: "/" })}
-              className="mr-2 h-4 w-4"
-            />
-            Log out
-          </Button>
+          <SignOut />
         </div>
       </div>
     </div>
