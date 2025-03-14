@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { File } from "lucide-react";
 import { TypographyH2 } from "@/components/ui/typography";
 import { ModeToggle } from "./mode-toggle";

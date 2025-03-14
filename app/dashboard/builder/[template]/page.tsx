@@ -8,8 +8,6 @@ import {
   Minimize,
   GraduationCap,
   Download,
-  FileText,
-  Wand2,
   Trophy,
   PlusCircle
 } from "lucide-react";
@@ -191,7 +189,6 @@ const initialResumeData: ResumeData = {
 export default function TemplatePage({ params }: { params: { template: string } }) {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
   const [jobDescription, setJobDescription] = useState('');
-  const [scale, setScale] = useState(0.7);
   const previewRef = useRef<HTMLDivElement>(null);
   
   const template = Object.values(templateCategories)
@@ -202,21 +199,13 @@ export default function TemplatePage({ params }: { params: { template: string } 
     return notFound();
   }
 
-  const handleUploadResume = async (file: File) => {
-    toast.info('Resume parsing will be implemented soon!');
-  };
-
-  const handleUploadLinkedIn = async (file: File) => {
-    toast.info('LinkedIn PDF parsing will be implemented soon!');
-  };
-
   const handleDownloadPDF = async () => {
     try {
       if (previewRef.current) {
         await generatePDF(previewRef.current, `${resumeData.personalInfo.fullName.toLowerCase().replace(/\s+/g, '-')}-resume.pdf`);
         toast.success('Resume downloaded successfully!');
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to download PDF');
     }
   };
@@ -227,7 +216,7 @@ export default function TemplatePage({ params }: { params: { template: string } 
       const suggestion = await getAISuggestion(field, content, jobDescription);
       toast.success('AI suggestion generated!');
       return suggestion;
-    } catch (error) {
+    } catch {
       toast.error('Failed to get AI suggestion');
       return null;
     }
@@ -239,7 +228,7 @@ export default function TemplatePage({ params }: { params: { template: string } 
       const bullets = await generateBulletPoints(description);
       toast.success('Bullet points generated!');
       return bullets;
-    } catch (error) {
+    } catch {
       toast.error('Failed to generate bullet points');
       return null;
     }
@@ -319,18 +308,6 @@ export default function TemplatePage({ params }: { params: { template: string } 
     }));
   };
 
-  const adjustScale = () => {
-    if (previewRef.current) {
-      const container = previewRef.current.parentElement;
-      if (container) {
-        const containerHeight = container.clientHeight;
-        const contentHeight = previewRef.current.scrollHeight;
-        const newScale = Math.min(containerHeight / contentHeight, 0.7);
-        setScale(newScale);
-      }
-    }
-  };
-
   return (
     <div className="flex h-screen overflow-hidden">
       <div className="w-1/2 p-4 overflow-y-auto">
@@ -363,8 +340,6 @@ export default function TemplatePage({ params }: { params: { template: string } 
           <ResumeForm
             data={resumeData}
             onChange={setResumeData}
-            onUploadResume={handleUploadResume}
-            onUploadLinkedIn={handleUploadLinkedIn}
             onAISuggestion={handleAISuggestion}
             onGenerateBulletPoints={handleGenerateBulletPoints}
             onAddAchievement={handleAddAchievement}
@@ -383,7 +358,6 @@ export default function TemplatePage({ params }: { params: { template: string } 
           <ResumePreview
             data={resumeData}
             templateId={template.id}
-            scale={scale}
           />
         </div>
       </div>

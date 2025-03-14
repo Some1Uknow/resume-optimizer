@@ -28,6 +28,18 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 // Worker configuration
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
+// Polyfill for Promise.withResolvers
+if (!Promise.withResolvers) {
+  Promise.withResolvers = function withResolvers<T>() {
+    let resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void;
+    const promise = new Promise<T>((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    return { promise, resolve, reject };
+  };
+}
+
 interface Analysis {
   summary: string;
   improvements: {

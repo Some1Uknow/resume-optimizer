@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Plus, Minus, Upload, Wand2 } from "lucide-react";
+import { Plus, Minus, Wand2 } from "lucide-react";
 
 export interface ResumeData {
   personalInfo: {
@@ -56,8 +56,6 @@ export interface ResumeData {
 interface ResumeFormProps {
   data: ResumeData;
   onChange: (data: ResumeData) => void;
-  onUploadResume: (file: File) => void;
-  onUploadLinkedIn: (file: File) => void;
   onAISuggestion?: (field: string, content: string) => Promise<string | null>;
   onGenerateBulletPoints?: (description: string) => Promise<string[] | null>;
   onAddAchievement: () => void;
@@ -73,8 +71,6 @@ interface ResumeFormProps {
 export function ResumeForm({ 
   data, 
   onChange, 
-  onUploadResume, 
-  onUploadLinkedIn,
   onAISuggestion,
   onGenerateBulletPoints,
   onAddAchievement,
@@ -167,10 +163,6 @@ export function ResumeForm({
             id="resume-upload"
             type="file"
             accept=".pdf,.doc,.docx"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) onUploadResume(file);
-            }}
             className="cursor-pointer"
           />
         </div>
@@ -180,10 +172,6 @@ export function ResumeForm({
             id="linkedin-upload"
             type="file"
             accept=".pdf"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) onUploadLinkedIn(file);
-            }}
             className="cursor-pointer"
           />
         </div>

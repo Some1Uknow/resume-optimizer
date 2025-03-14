@@ -1,7 +1,6 @@
 import { signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import toast from "react-hot-toast";
 
 export default function SignIn() {
   const handleSignIn = async () => {

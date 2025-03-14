@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText, PenTool, BarChart, LogOut } from "lucide-react";
+import { FileText, PenTool, BarChart } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { SignOut } from "./sign-out";
 import { auth } from "@/auth";
