@@ -3,6 +3,15 @@ import { Toaster } from "sonner";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
+/**
+ * A layout component for the dashboard.
+ *
+ * Checks if the user is signed in, and redirects to the signin page if not.
+ * Otherwise, renders the sidebar and the children within a flexbox row.
+ *
+ * @param {{ children: React.ReactNode }} props
+ * @returns {JSX.Element} The rendered layout component.
+ */
 export default async function DashboardLayout({
   children,
 }: {
@@ -23,8 +32,8 @@ export default async function DashboardLayout({
       <div className="sticky top-0 h-screen overflow-y-auto">
         <Sidebar />
       </div>
-      <main className="flex-1 overflow-y-auto">
-        <div className="container mx-auto py-6 px-4">{children}</div>
+      <main className="flex-1 h-screen overflow-y-auto">
+        <div className="p-3 h-screen">{children}</div>
         <Toaster />
       </main>
     </div>

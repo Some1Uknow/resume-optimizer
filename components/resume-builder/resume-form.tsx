@@ -38,6 +38,19 @@ export interface ResumeData {
     category: string;
     items: string[];
   }>;
+  achievements: Array<{
+    title: string;
+    date: string;
+    description: string;
+  }>;
+  customSections: Array<{
+    title: string;
+    items: Array<{
+      title: string;
+      description: string;
+      date: string;
+    }>;
+  }>;
 }
 
 interface ResumeFormProps {
@@ -47,6 +60,14 @@ interface ResumeFormProps {
   onUploadLinkedIn: (file: File) => void;
   onAISuggestion?: (field: string, content: string) => Promise<string | null>;
   onGenerateBulletPoints?: (description: string) => Promise<string[] | null>;
+  onAddAchievement: () => void;
+  onUpdateAchievement: (index: number, field: string, value: string) => void;
+  onRemoveAchievement: (index: number) => void;
+  onAddCustomSection: () => void;
+  onUpdateCustomSection: (index: number, field: string, value: string) => void;
+  onAddCustomSectionItem: (sectionIndex: number) => void;
+  onUpdateCustomSectionItem: (sectionIndex: number, itemIndex: number, field: string, value: string) => void;
+  onRemoveCustomSectionItem: (sectionIndex: number, itemIndex: number) => void;
 }
 
 export function ResumeForm({ 
@@ -55,7 +76,15 @@ export function ResumeForm({
   onUploadResume, 
   onUploadLinkedIn,
   onAISuggestion,
-  onGenerateBulletPoints 
+  onGenerateBulletPoints,
+  onAddAchievement,
+  onUpdateAchievement,
+  onRemoveAchievement,
+  onAddCustomSection,
+  onUpdateCustomSection,
+  onAddCustomSectionItem,
+  onUpdateCustomSectionItem,
+  onRemoveCustomSectionItem 
 }: ResumeFormProps) {
   const [activeSection, setActiveSection] = useState<string>("personal");
 
@@ -129,9 +158,9 @@ export function ResumeForm({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-h-screen">
       {/* Upload Buttons */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex gap-4">
         <div className="flex-1">
           <Label htmlFor="resume-upload" className="block mb-2">Upload Existing Resume</Label>
           <Input
@@ -161,8 +190,8 @@ export function ResumeForm({
       </div>
 
       {/* Section Navigation */}
-      <div className="flex gap-2 mb-6">
-        {["personal", "summary", "experience", "education", "skills"].map((section) => (
+      <div className="flex gap-2 mb-6 overflow-auto">
+        {["personal", "summary", "experience", "education", "skills", "achievements", "customSections"].map((section) => (
           <Button
             key={section}
             variant={activeSection === section ? "default" : "outline"}
@@ -542,6 +571,78 @@ export function ResumeForm({
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Achievements */}
+      <div className={activeSection === "achievements" ? "" : "hidden"}>
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Achievements</h3>
+          {data.achievements.map((achievement, index) => (
+            <div key={index} className="space-y-2">
+              <Input
+                value={achievement.title}
+                onChange={(e) => onUpdateAchievement(index, 'title', e.target.value)}
+                placeholder="Achievement title"
+              />
+              <Input
+                value={achievement.date}
+                onChange={(e) => onUpdateAchievement(index, 'date', e.target.value)}
+                placeholder="Date"
+              />
+              <Textarea
+                value={achievement.description}
+                onChange={(e) => onUpdateAchievement(index, 'description', e.target.value)}
+                placeholder="Description"
+              />
+              <Button onClick={() => onRemoveAchievement(index)}>Remove</Button>
+            </div>
+          ))}
+          <Button onClick={onAddAchievement}>
+            Add Achievement
+          </Button>
+        </div>
+      </div>
+
+      {/* Custom Sections */}
+      <div className={activeSection === "customSections" ? "" : "hidden"}>
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Custom Sections</h3>
+          {data.customSections.map((section, index) => (
+            <div key={index} className="space-y-4">
+              <Input
+                value={section.title}
+                onChange={(e) => onUpdateCustomSection(index, 'title', e.target.value)}
+                placeholder="Section title"
+              />
+              {section.items.map((item, itemIndex) => (
+                <div key={itemIndex} className="space-y-2">
+                  <Input
+                    value={item.title}
+                    onChange={(e) => onUpdateCustomSectionItem(index, itemIndex, 'title', e.target.value)}
+                    placeholder="Item title"
+                  />
+                  <Textarea
+                    value={item.description}
+                    onChange={(e) => onUpdateCustomSectionItem(index, itemIndex, 'description', e.target.value)}
+                    placeholder="Description"
+                  />
+                  <Input
+                    value={item.date}
+                    onChange={(e) => onUpdateCustomSectionItem(index, itemIndex, 'date', e.target.value)}
+                    placeholder="Date"
+                  />
+                  <Button onClick={() => onRemoveCustomSectionItem(index, itemIndex)}>Remove Item</Button>
+                </div>
+              ))}
+              <Button onClick={() => onAddCustomSectionItem(index)}>
+                Add Item
+              </Button>
+            </div>
+          ))}
+          <Button onClick={onAddCustomSection}>
+            Add Custom Section
+          </Button>
+        </div>
       </div>
     </div>
   );
