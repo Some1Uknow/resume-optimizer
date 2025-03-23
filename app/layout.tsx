@@ -1,8 +1,9 @@
-import type React from "react";
+
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import AuthRedirectNotifier from "@/components/AuthRedirectNotifier";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
 export const metadata = {
   title: "ResumeAI - AI-Powered Resume Builder",
   description:
@@ -24,7 +25,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster />
-          <AuthRedirectNotifier />
+          <Suspense fallback={<>Loading</>}>
+            <AuthRedirectNotifier />
+          </Suspense>
           {children}
         </ThemeProvider>
       </body>
