@@ -1,36 +1,33 @@
-import type { Metadata } from "next"
-import { Inter } from 'next/font/google'
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/sonner"
-import { ConditionalHeader } from "@/components/conditional-header";
-
-const inter = Inter({ subsets: ["latin"] })
-
-export const metadata: Metadata = {
-  title: "ResumeMax - AI-Powered Resume Builder",
-  description: "Create ATS-optimized resumes with AI assistance",
-}
+import type React from "react";
+import "@/app/globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import AuthRedirectNotifier from "@/components/AuthRedirectNotifier";
+import { Toaster } from "sonner";
+export const metadata = {
+  title: "ResumeAI - AI-Powered Resume Builder",
+  description:
+    "Create perfect resumes with AI. Type naturally, watch your resume build in real-time.",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <ConditionalHeader />
+          <Toaster />
+          <AuthRedirectNotifier />
           {children}
-          <Toaster/>
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

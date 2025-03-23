@@ -5,7 +5,7 @@ import { Icons } from "@/components/icons";
 export default function SignIn() {
   const handleSignIn = async () => {
     "use server";
-    await signIn("google", { redirectTo: "/dashboard" });
+    await signIn("google", { redirectTo: "/builder" });
   };
 
   return (

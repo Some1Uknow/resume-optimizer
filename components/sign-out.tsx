@@ -1,7 +1,8 @@
+"use server";
 import { signOut } from "@/auth";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
-export function SignOut() {
+export async function SignOut() {
   return (
     <form
       action={async () => {
@@ -21,4 +22,10 @@ export function SignOut() {
       </Button>
     </form>
   );
+}
+
+
+export async function logout() {
+  "use server"; // Ensure this is a server action
+  await signOut({ redirectTo: "/" });
 }
