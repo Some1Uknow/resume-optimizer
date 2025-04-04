@@ -3,8 +3,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import SignIn from "@/components/sign-in";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function Login() { 
+export default async function Login() { 
+  const session = await auth();
+  console.log(session)
+  if(session) {
+    redirect('/builder')
+  }
   return (
     <div className="flex min-h-screen flex-col">
       {/* <Header /> */}

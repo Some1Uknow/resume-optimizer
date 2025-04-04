@@ -1,11 +1,16 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import Link from "next/link"
-import SignIn from "@/components/sign-in"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import SignIn from "@/components/sign-in";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function SignUp() {
-
+  const session = await auth();
+  if (session) {
+    redirect("/builder");
+  }
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1 flex items-center justify-center">
@@ -23,7 +28,12 @@ export default async function SignUp() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder="m@example.com" required type="email" />
+              <Input
+                id="email"
+                placeholder="m@example.com"
+                required
+                type="email"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -39,15 +49,18 @@ export default async function SignUp() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Or continue with  
+                Or continue with
               </span>
             </div>
           </div>
           <div className="w-full space-y-2">
             <SignIn />
             <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
-              <Link href="/signin" className="font-medium text-primary hover:underline">
+              Already have an account?{" "}
+              <Link
+                href="/signin"
+                className="font-medium text-primary hover:underline"
+              >
                 Login
               </Link>
             </p>
@@ -55,5 +68,5 @@ export default async function SignUp() {
         </div>
       </main>
     </div>
-  )
+  );
 }
