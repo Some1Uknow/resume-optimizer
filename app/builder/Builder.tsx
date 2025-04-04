@@ -7,13 +7,18 @@ import { Send, Loader2, LoaderIcon } from "lucide-react";
 import ResumePreview from "@/components/resume-preview";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { redirect } from "next/navigation";
 
 interface ChatMessage {
   role: "user" | "model";
-  parts: Array<{ text: string }>; // ✅ Corrected type
+  parts: Array<{ text: string }>;
 }
 
 export default function BuilderPage({ session }) {
+  if (!session) {
+    redirect("/signin");
+  }
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const [inputMessage, setInputMessage] = useState("");

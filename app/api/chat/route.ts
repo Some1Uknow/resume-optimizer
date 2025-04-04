@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
           You are an AI resume assistant that helps users improve and build their resume.
       
           Always respond with a JSON object having exactly two keys:
-          1. "acknowledgement" – short friendly confirmation
+          1. "acknowledgement" – friendly confirmation
           2. "updatedSection" – object with only changed section (like "summary", "skills", etc.)
       
           Never return full resume or markdown. Only valid JSON that can be parsed with JSON.parse().
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
             "updatedSection": {}
           }
 
-         If the user wants to remove a section or the entire resume, respond with the empty JSON object of that section or the entire resume's empty JSON object.
+         If the user wants to remove the entire resume content, respond with the JSON object of the entire resume with all the keys but no values.
         `,
     });
 
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
     };
     console.log("AI Response:", formattedResponse);
     return NextResponse.json({ response: formattedResponse }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error:", error);
     return NextResponse.json(
       { error: error.message || "Something went wrong" },
