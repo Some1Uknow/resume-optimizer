@@ -10,6 +10,8 @@ interface ResumeData {
     phone: string
     location: string
     linkedin: string
+    github: string
+    blogs: string
   }
   summary: string
   experience: Array<{
@@ -22,11 +24,17 @@ interface ResumeData {
   education: Array<{
     degree: string
     institution: string
-    location: string
     year: string
   }>
   skills: string[]
+  projects: Array<{
+    name: string
+    description: string
+    techStack: string[]
+  }>
+  achievements: string[]
 }
+
 
 interface ResumePreviewProps {
   data: ResumeData
@@ -101,7 +109,7 @@ export default function ResumePreview({ data, className }: ResumePreviewProps) {
                 <div>
                   <h3 className="font-semibold text-lg">{edu.degree}</h3>
                   <p className="text-blue-600 font-medium">
-                    {edu.institution} {edu.location}
+                    {edu.institution}
                   </p>
                 </div>
                 <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
