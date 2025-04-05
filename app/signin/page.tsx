@@ -5,12 +5,15 @@ import Link from "next/link";
 import SignIn from "@/components/sign-in";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
-export default async function Login() { 
+export default async function Login() {
   const session = await auth();
-  console.log(session)
-  if(session) {
-    redirect('/builder')
+  console.log(session);
+  if (session) {
+    const id = uuidv4();
+    // redirect to builder page with a unique id
+    redirect(`/builder/${id}`);
   }
   return (
     <div className="flex min-h-screen flex-col">

@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Plus } from "lucide-react";
 
 import {
   Sidebar,
@@ -9,62 +9,57 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarHeader
-} from "@/components/ui/sidebar"
-import { ModeToggle } from "./mode-toggle"
+  SidebarHeader,
+} from "@/components/ui/sidebar";
+import { ModeToggle } from "./mode-toggle";
+import { SignOut } from "./sign-out";
+import Link from "next/link";
+import { Button } from "./ui/button";
+import { v4 as uuidv4 } from "uuid";
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-]
-
-export function AppSidebar() {
+export function AppSidebar({
+  chats,
+}: {
+  chats: { id: string; title: string }[];
+}) 
+ // Generate a new UUID for the chat ID
+{
+  const chatId = uuidv4();
   return (
     <Sidebar>
-        <SidebarHeader>ResumeMax <ModeToggle/></SidebarHeader>
+      <SidebarHeader className="flex flex-row items-center justify-between px-4">
+        ResumeMax <ModeToggle />
+      </SidebarHeader>
       <SidebarContent>
+        <div className="px-2 w-full flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Link href={`/builder/${chatId}`}>
+              <Button variant="default">
+                New Chat <Plus />
+              </Button>
+            </Link>
+          </div>
+        </div>
         <SidebarGroup>
-          <SidebarGroupLabel>Resumes</SidebarGroupLabel>
+          <SidebarGroupLabel>Chats</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {chats.map((chat) => (
+                <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
+                    <Link href={`/builder/${chat.id}`}>
+                      <span>{chat.title || "Untitled"}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <div className="px-2">
+          <SignOut />
+        </div>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

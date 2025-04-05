@@ -1,11 +1,14 @@
 import { signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import { v4 as uuidv4 } from "uuid";
 
 export default function SignIn() {
+  
   const handleSignIn = async () => {
     "use server";
-    await signIn("google", { redirectTo: "/builder" });
+    const id = uuidv4();
+    await signIn("google", { redirectTo: `/builder/${id}` });
   };
 
   return (

@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { auth } from "@/auth";
+import db from "@/prisma/prisma";
 
 export async function POST(req: NextRequest) {
   try {
-    const { history, resumeData } = await req.json();
+    const { history, resumeData, chatId } = await req.json();
+    console.log("Chat history:", history, resumeData, chatId);
 
     if (!history || !Array.isArray(history) || history.length === 0) {
       return NextResponse.json(
@@ -12,75 +15,121 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const latestUserMessage = history[history.length - 1]?.parts?.[0]?.text;
+    if (!latestUserMessage || !resumeData || !chatId) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const apiKey = process.env.GEMINI_KEY;
     if (!apiKey) {
       return NextResponse.json({ error: "Missing API key" }, { status: 500 });
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash-8b",
       systemInstruction: `
-          You are an AI resume assistant that helps users improve and build their resume.
-      
-          Always respond with a JSON object having exactly two keys:
-          1. "acknowledgement" – friendly confirmation
-          2. "updatedSection" – object with only changed section (like "summary", "skills", etc.)
-      
-          Never return full resume or markdown. Only valid JSON that can be parsed with JSON.parse().
-          Follow the format strictly given by the user.
-        
-          If no action is needed, send:
-          {
-            "acknowledgement": "No updates required.",
-            "updatedSection": {}
-          }
-
-         If the user wants to remove the entire resume content, respond with the JSON object of the entire resume with all the keys but no values.
-        `,
+        You are an AI resume assistant that helps users improve and build their resume.
+        Always respond with a JSON object having exactly two keys:
+        1. "acknowledgement"
+        2. "updatedSection"
+        Never return full resume or markdown.
+        If no updates:
+        {
+          "acknowledgement": "No updates required.",
+          "updatedSection": {}
+        }
+        If resume needs clearing, send full structure with empty values.
+        Make sure that the JSON is valid and well-structured as it will be directly parsed by the frontend.
+      `,
     });
 
-    const generationConfig = {
-      temperature: 1,
-      topP: 0.95,
-    };
-
     const chatSession = model.startChat({
-      generationConfig,
+      generationConfig: { temperature: 1, topP: 0.95 },
       history,
     });
 
-    const latestUserMessage = history[history.length - 1]?.parts?.[0]?.text;
+    // ✅ Don't include resumeData in message text
+    const result = await chatSession.sendMessage(
+      latestUserMessage + JSON.stringify(resumeData)
+    );
+    const aiRawText = result.response.text();
 
-    if (!latestUserMessage || !resumeData) {
+    // ✅ Clean AI response (remove ```json ... ``` wrappers if present)
+    const cleanedText = aiRawText.replace(/```json|```/g, "").trim();
+
+    let parsedResponse;
+    try {
+      parsedResponse = JSON.parse(cleanedText);
+    } catch (err) {
       return NextResponse.json(
-        {
-          error: "Missing user message or resumeData",
-          latestUserMessage,
-          resumeData,
-        },
-        { status: 400 }
+        { error: "AI response could not be parsed" },
+        { status: 500 }
       );
     }
 
-    const userMessage =
-      latestUserMessage + `\n\nResume Data: ${JSON.stringify(resumeData)}`;
+    const acknowledgement =
+      parsedResponse?.acknowledgement || "Resume updated.";
 
-    const result = await chatSession.sendMessage(userMessage);
+    // Construct user + model messages
+    const userMsg = { role: "user", parts: [{ text: latestUserMessage }] };
+    const modelMsg = { role: "model", parts: [{ text: acknowledgement }] };
 
-    const text = result.response.text();
-    const formattedResponse = {
-      role: "model",
-      parts: [{ text }],
-    };
-    console.log("AI Response:", formattedResponse);
-    return NextResponse.json({ response: formattedResponse }, { status: 200 });
-  } catch (error) {
-    console.error("Error:", error);
+    const newMessages = [...history, userMsg, modelMsg];
+
+    // Save or update chat
+    const existingChat = await db.chat.findUnique({ where: { id: chatId } });
+
+    if (!existingChat) {
+      await db.chat.create({
+        data: {
+          id: chatId,
+          userId: session.user.id,
+          title: latestUserMessage.slice(0, 30) || "Untitled Resume Chat",
+          messages: newMessages,
+          resumeData,
+          resumeTemplate: "classic",
+        },
+      });
+    } else {
+      await db.chat.update({
+        where: { id: chatId },
+        data: {
+          messages: newMessages,
+          resumeData,
+        },
+      });
+    }
+
+    return NextResponse.json({ response: parsedResponse }, { status: 200 });
+  } catch (error: any) {
+    console.error("Chat error:", error);
     return NextResponse.json(
-      { error: error.message || "Something went wrong" },
+      { error: error.message || "Internal Server Error" },
       { status: 500 }
     );
   }
+}
+
+export async function GET() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const chats = await db.chat.findMany({
+    where: { userId: session.user.id },
+    select: { id: true, title: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return NextResponse.json({ chats });
 }
