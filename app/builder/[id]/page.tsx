@@ -33,7 +33,7 @@ export default async function page({
       resumeTemplate: true,
     },
   });
- console.log("Chat", chat, chatId);
+ // console.log("MESSAGES", chat.messages);
   return (
     <SidebarProvider>
       <AppSidebar chats={chats} />

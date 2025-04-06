@@ -6,7 +6,6 @@ import db from "@/prisma/prisma";
 export async function POST(req: NextRequest) {
   try {
     const { history, resumeData, chatId } = await req.json();
-    console.log("Chat history:", history, resumeData, chatId);
 
     if (!history || !Array.isArray(history) || history.length === 0) {
       return NextResponse.json(
@@ -57,13 +56,12 @@ export async function POST(req: NextRequest) {
       history,
     });
 
-    // ✅ Don't include resumeData in message text
-    const result = await chatSession.sendMessage(
-      latestUserMessage + JSON.stringify(resumeData)
-    );
+    const prompt = `${latestUserMessage}\n\nResume Data: ${JSON.stringify(
+      resumeData
+    )}`;
+    const result = await chatSession.sendMessage(prompt);
     const aiRawText = result.response.text();
 
-    // ✅ Clean AI response (remove ```json ... ``` wrappers if present)
     const cleanedText = aiRawText.replace(/```json|```/g, "").trim();
 
     let parsedResponse;
@@ -78,14 +76,14 @@ export async function POST(req: NextRequest) {
 
     const acknowledgement =
       parsedResponse?.acknowledgement || "Resume updated.";
+    const updatedSection = parsedResponse?.updatedSection || {};
 
-    // Construct user + model messages
+    const updatedResumeData = deepMerge(resumeData, updatedSection);
+
     const userMsg = { role: "user", parts: [{ text: latestUserMessage }] };
     const modelMsg = { role: "model", parts: [{ text: acknowledgement }] };
-
     const newMessages = [...history, userMsg, modelMsg];
 
-    // Save or update chat
     const existingChat = await db.chat.findUnique({ where: { id: chatId } });
 
     if (!existingChat) {
@@ -94,8 +92,8 @@ export async function POST(req: NextRequest) {
           id: chatId,
           userId: session.user.id,
           title: latestUserMessage.slice(0, 30) || "Untitled Resume Chat",
-          messages: newMessages,
-          resumeData,
+          messages: [userMsg, modelMsg],
+          resumeData: updatedResumeData,
           resumeTemplate: "classic",
         },
       });
@@ -103,8 +101,10 @@ export async function POST(req: NextRequest) {
       await db.chat.update({
         where: { id: chatId },
         data: {
-          messages: newMessages,
-          resumeData,
+          messages: {
+            push: [userMsg, modelMsg], // 👈 appending only the new messages
+          },
+          resumeData: updatedResumeData,
         },
       });
     }
@@ -132,4 +132,27 @@ export async function GET() {
   });
 
   return NextResponse.json({ chats });
+}
+
+function deepMerge(target: any, source: any): any {
+  if (
+    typeof target !== "object" ||
+    typeof source !== "object" ||
+    !target ||
+    !source
+  ) {
+    return source;
+  }
+
+  const output = { ...target };
+  for (const key of Object.keys(source)) {
+    if (Array.isArray(source[key])) {
+      output[key] = source[key]; // Replace arrays directly
+    } else if (typeof source[key] === "object") {
+      output[key] = deepMerge(target[key] ?? {}, source[key]);
+    } else {
+      output[key] = source[key];
+    }
+  }
+  return output;
 }

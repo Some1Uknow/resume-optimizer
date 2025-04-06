@@ -9,8 +9,10 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { ModeToggle } from "@/components/mode-toggle";
+import { v4 as uuidv4 } from "uuid";
 
 export default function HomePage() {
+  const chatId = uuidv4();
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
       {/* Blob decorations */}
@@ -62,10 +64,9 @@ export default function HomePage() {
             asChild
             className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600 border-0 shadow-md hover:shadow-lg transition-all duration-300"
           >
-            <Link href="/builder">Get Started</Link>
-
+            <Link href={`/builder/${chatId}`}>Get Started</Link>
           </Button>
-          <ModeToggle/>
+          <ModeToggle />
         </div>
       </header>
 
@@ -96,7 +97,7 @@ export default function HomePage() {
                   size="lg"
                   className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600 border-0 shadow-md hover:shadow-lg transition-all duration-300 px-8 py-6 text-lg"
                 >
-                  <Link href="/builder">
+                  <Link href={`/builder/${chatId}`}>
                     Build Your Resume <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
@@ -486,7 +487,6 @@ export default function HomePage() {
                     >
                       Get Started
                     </Button>
-                  
                   </div>
                 </div>
               ))}
@@ -593,7 +593,7 @@ export default function HomePage() {
                 size="lg"
                 className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600 border-0 shadow-md hover:shadow-lg transition-all duration-300 px-8 py-6 text-lg"
               >
-                <Link href="/builder">
+                <Link href={`/builder/${chatId}`}>
                   Get Started for Free <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>

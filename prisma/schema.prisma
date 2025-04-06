@@ -61,7 +61,7 @@ model Chat {
   id         String   @id @default(cuid())
   userId     String
   title      String    // e.g. "SDE Resume Chat"
-  messages   Json      // [{ role: 'user', text: '...' }, { role: 'model', text: '...' }]
+  messages   Json[]      // [{ role: 'user', text: '...' }, { role: 'model', text: '...' }]
   resumeData Json      // complete current resume snapshot
   resumeTemplate String?   // e.g. "classic", "modern"
   createdAt  DateTime  @default(now())

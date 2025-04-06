@@ -4,12 +4,14 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import SignIn from "@/components/sign-in";
 import { auth } from "@/auth";
+import { v4 as uuidv4 } from "uuid";
 import { redirect } from "next/navigation";
 
 export default async function SignUp() {
   const session = await auth();
   if (session) {
-    redirect("/builder");
+    const id = uuidv4();
+    redirect(`/builder/${id}`);
   }
   return (
     <div className="flex min-h-screen flex-col">
