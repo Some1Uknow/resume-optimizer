@@ -208,17 +208,3 @@ function getEmptyResume() {
     achievements: [],
   };
 }
-
-function cleanJSON(text: string) {
-  return text.replace(/```json|```/g, "").trim();
-}
-
-function isParsableJSON(text: string) {
-  try {
-    const cleaned = cleanJSON(text);
-    JSON.parse(cleaned);
-    return true;
-  } catch {
-    return false;
-  }
-}

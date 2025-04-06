@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       parsedResponse = JSON.parse(cleanedText);
     } catch (err) {
       return NextResponse.json(
-        { error: "AI response could not be parsed" },
+        { error: "AI response could not be parsed", details: err },
         { status: 500 }
       );
     }
@@ -82,7 +82,6 @@ export async function POST(req: NextRequest) {
 
     const userMsg = { role: "user", parts: [{ text: latestUserMessage }] };
     const modelMsg = { role: "model", parts: [{ text: acknowledgement }] };
-    const newMessages = [...history, userMsg, modelMsg];
 
     const existingChat = await db.chat.findUnique({ where: { id: chatId } });
 
@@ -110,7 +109,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ response: parsedResponse }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Chat error:", error);
     return NextResponse.json(
       { error: error.message || "Internal Server Error" },
@@ -134,6 +133,7 @@ export async function GET() {
   return NextResponse.json({ chats });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deepMerge(target: any, source: any): any {
   if (
     typeof target !== "object" ||
