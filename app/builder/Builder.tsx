@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2 } from "lucide-react";
@@ -26,24 +26,23 @@ export default function BuilderPage({ session, params, chats }) {
 
   useEffect(() => {
     if (!chats) return;
-  
+
     const { messages: chatMessages, resumeData: initialResumeData } = chats;
-  
-    const flattenedMessages = chatMessages.flat(); 
-  
+
+    const flattenedMessages = chatMessages.flat();
+
     setMessages(flattenedMessages);
     setResumeData(initialResumeData || getEmptyResume());
     setShowResume(true);
   }, [chats]);
-  
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const cleanMessage = (text: string) => {
+  const cleanMessage = useCallback((text: string) => {
     return text.replace(/Resume Data: {.*}/s, "").trim();
-  };
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -56,7 +55,6 @@ export default function BuilderPage({ session, params, chats }) {
     };
 
     if (!showResume) setShowResume(true);
-    // setMessages((prev) => [...prev, userMessage]);
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages); // Update UI immediately
     setInputMessage("");
@@ -104,20 +102,20 @@ export default function BuilderPage({ session, params, chats }) {
       handleSendMessage();
     }
   };
-  console.log("chats msges", chats?.messages);
-  console.table(messages);
+
   return (
-    <div className="flex flex-col w-full bg-black text-white">
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 h-full">
-        {/* Chat Section */}
-        <div className="flex flex-col h-screen border-r border-gray-800">
-          <ScrollArea className="flex-1 p-4 h-[calc(100vh-150px)] overflow-y-auto">
-            <div className="space-y-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 w-full h-screen bg-black text-white overflow-hidden">
+      {/* Chat Section - Left Column */}
+      <div className="flex flex-col h-screen border-r border-gray-800">
+        {/* Messages area - scrollable */}
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full p-4">
+            <div className="space-y-4 pb-4">
               {messages?.map((message, index) => (
                 <div
                   key={index}
                   className={cn(
-                    "backdrop-blur-md bg-white/5 border border-white/10 p-4 rounded-2xl max-w-[80%]",
+                    "backdrop-blur-md bg-white/5 border border-white/10 p-4 rounded-2xl w-max",
                     message.role === "user"
                       ? "ml-auto text-right"
                       : "mr-auto text-left"
@@ -139,31 +137,39 @@ export default function BuilderPage({ session, params, chats }) {
               <div ref={messagesEndRef} />
             </div>
           </ScrollArea>
-
-          <div className="p-4 border-t border-gray-800 bg-black">
-            <div className="flex items-end gap-2">
-              <Textarea
-                placeholder="Start chatting to create your resume"
-                className="min-h-[80px] bg-white/5 border-white/10 text-white placeholder:text-white/50"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-              <Button
-                className="bg-white text-black hover:bg-gray-300"
-                onClick={handleSendMessage}
-                disabled={isGenerating || !inputMessage.trim()}
-              >
-                <Send className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
         </div>
 
-        {/* Resume Preview Section */}
-        <div className="hidden md:flex flex-col h-full relative bg-zinc-950">
+        {/* Input area - fixed at bottom */}
+        <div className="p-4 border-t border-gray-800 bg-black">
+          <div className="flex items-end gap-2">
+            <Textarea
+              placeholder="Start chatting to create your resume"
+              className="min-h-[80px] bg-white/5 border-white/10 text-white placeholder:text-white/50"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <Button
+              className="bg-white text-black hover:bg-gray-300"
+              onClick={handleSendMessage}
+              disabled={isGenerating || !inputMessage.trim()}
+            >
+              <Send className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Resume Preview Section - Right Column */}
+      <div className="hidden md:block h-screen bg-zinc-950 overflow-hidden">
+        <ScrollArea className="h-full">
           {showResume ? (
-            <ResumePreview data={resumeData} />
+            <div>
+              <ResumePreview
+                data={resumeData}
+                onChange={(newData) => setResumeData(newData)}
+              />
+            </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center text-center p-10">
               <div className="space-y-6 text-white">
@@ -176,7 +182,7 @@ export default function BuilderPage({ session, params, chats }) {
               </div>
             </div>
           )}
-        </div>
+        </ScrollArea>
       </div>
     </div>
   );

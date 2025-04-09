@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import { useMemo } from "react";
 
 import {
   Sidebar,
@@ -21,10 +22,9 @@ export function AppSidebar({
   chats,
 }: {
   chats: { id: string; title: string }[];
-}) 
- // Generate a new UUID for the chat ID
-{
-  const chatId = uuidv4();
+}) {
+  const chatId = useMemo(() => uuidv4(), []);
+
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-row items-center justify-between px-4">
