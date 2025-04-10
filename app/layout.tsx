@@ -3,7 +3,7 @@ import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata = {
-  title: "ResumeAI - AI-Powered Resume Builder",
+  title: "ResumeMax - AI-Powered Resume Builder",
   description: "Create perfect resumes with AI. Type naturally, watch your resume build in real-time.",
 }
 

@@ -1,44 +1,32 @@
 import { auth } from "@/auth";
-import BuilderPage from "../Builder";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import BuilderPage from "../../../components/Builder"; // Adjust path if necessary
 import db from "@/prisma/prisma";
+import { redirect } from "next/navigation";
 
-export default async function page({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const session = await auth();
+export default async function page({ params }: { params: { id: string } }) {
+  const session = await auth(); // Still needed for auth check and potentially BuilderPage
 
-  if (!session?.user?.id) return null;
+  // It's good practice to double-check auth even if layout does
+  if (!session?.user?.id) {
+    redirect("/signin");
+  }
 
-  const [chats, chat] = await Promise.all([
-    db.chat.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        title: true,
-      },
-    }),
-    db.chat.findUnique({
-      where: { id: params.id },
-      select: {
-        id: true,
-        title: true,
-        messages: true,
-        resumeData: true,
-        resumeTemplate: true,
-      },
-    }),
-  ]);
+  // --- Fetch ONLY the specific chat data here ---
+  const chat = await db.chat.findUnique({
+    where: {
+      id: params.id,
+      userId: session.user.id,
+    },
+    select: {
+      id: true,
+      title: true,
+      messages: true,
+      resumeData: true,
+      resumeTemplate: true,
+    },
+  });
 
   return (
-    <SidebarProvider>
-      <AppSidebar chats={chats} />
-      <SidebarTrigger />
-      <BuilderPage session={session} params={params} chats={chat} />
-    </SidebarProvider>
+    <BuilderPage session={session} params={params} initialChatData={chat} />
   );
 }

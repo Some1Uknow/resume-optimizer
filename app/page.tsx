@@ -785,7 +785,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 text-center text-slate-600 dark:text-slate-400">
-            <p>© {new Date().getFullYear()} ResumeMax. All rights reserved.</p>
+            <div>© {new Date().getFullYear()} ResumeMax. All rights reserved.</p>
           </div>
         </div>
       </footer>

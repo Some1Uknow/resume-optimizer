@@ -8,33 +8,50 @@ import ResumePreview from "@/components/resume-preview";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { redirect } from "next/navigation";
+import { ResumeData, ResumePreviewProps } from "@/utils/types";
+import { ResumeDisplay } from "@/components/resume/ResumeDisplay";
 
 interface ChatMessage {
   role: "user" | "model";
   parts: Array<{ text: string }>;
 }
 
-export default function BuilderPage({ session, params, chats }) {
+export default function BuilderPage({ session, params, initialChatData }) {
   if (!session) redirect("/signin");
   const { id } = params;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputMessage, setInputMessage] = useState("");
-  const [resumeData, setResumeData] = useState(getEmptyResume());
+  const [resumeData, setResumeData] = useState<ResumeData>(initialChatData?.resumeData || getEmptyResume());
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showResume, setShowResume] = useState(() => chats && chats.length > 0);
+  const [inputMessage, setInputMessage] = useState("");
+  // Use initialChatData to decide initial state
+  const [showResume, setShowResume] = useState(() => !!initialChatData);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  console.log("BuilderPage initialChatData: ", resumeData);
+
   useEffect(() => {
-    if (!chats) return;
+    // Use initialChatData here
+    if (!initialChatData) {
+      // Handle case where no initial data is provided (e.g., new chat, or error)
+      // Reset state if necessary, or rely on default useState values
+      setMessages([]);
+      setResumeData(getEmptyResume());
+      setShowResume(false); // Or true depending on desired behavior for non-existent chat ID
+      return;
+    }
 
-    const { messages: chatMessages, resumeData: initialResumeData } = chats;
+    const { messages: chatMessages, resumeData: chatResumeData } =
+      initialChatData;
 
-    const flattenedMessages = chatMessages.flat();
+    // Ensure messages is always an array, even if null/undefined in DB
+    const flattenedMessages = Array.isArray(chatMessages)
+      ? chatMessages.flat()
+      : [];
 
     setMessages(flattenedMessages);
-    setResumeData(initialResumeData || getEmptyResume());
+    setResumeData(chatResumeData || getEmptyResume());
     setShowResume(true);
-  }, [chats]);
+  }, [initialChatData]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -164,12 +181,16 @@ export default function BuilderPage({ session, params, chats }) {
       <div className="hidden md:block h-screen bg-zinc-950 overflow-hidden">
         <ScrollArea className="h-full">
           {showResume ? (
-            <div>
-              <ResumePreview
-                data={resumeData}
-                onChange={(newData) => setResumeData(newData)}
-              />
-            </div>
+            <ResumeDisplay
+              data={resumeData}
+              handleDataChange={(updater) =>
+                setResumeData((prev) => {
+                  const updated = { ...prev }; // Ensure `prev` is an object
+                  updater(updated); // Apply the updater function
+                  return updated; // Return the updated object
+                })
+              }
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-center p-10">
               <div className="space-y-6 text-white">
