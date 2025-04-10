@@ -147,7 +147,7 @@ Based on the job description for ${
           </div>
         ) : (
           <div className="flex items-center justify-center h-full text-muted-foreground">
-            <div>Your generated cover letter will appear here</p>
+            <div>Your generated cover letter will appear here</div>
           </div>
         )}
       </div>

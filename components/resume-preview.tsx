@@ -12,11 +12,11 @@ export default function ResumePreview({
   onChange,
 }: ResumePreviewProps) {
   const [data, setData] = useState<ResumeData>(initialData);
-  const [resumeData, setResumeData] = useState<ResumeData>(initialData);
-  console.log("Resume preview component: ", data);
+ 
   useEffect(() => {
-    setResumeData(data);
-  }, [initialData]);
+    setData(data);
+  }, [initialData, data]);
+
   const handleDataChange = useCallback(
     (updater: (draft: ResumeData) => void) => {
       const updatedData = { ...data };

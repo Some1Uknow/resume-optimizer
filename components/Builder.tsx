@@ -4,11 +4,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2 } from "lucide-react";
-import ResumePreview from "@/components/resume-preview";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { redirect } from "next/navigation";
-import { ResumeData, ResumePreviewProps } from "@/utils/types";
+import { ResumeData } from "@/utils/types";
 import { ResumeDisplay } from "@/components/resume/ResumeDisplay";
 
 interface ChatMessage {
