@@ -1,0 +1,16 @@
+/* Add your global styles here */
+
+/* Template Styles */
+.template-modern {
+  font-family: 'Inter', sans-serif;
+}
+
+.template-classic {
+  font-family: 'Georgia', serif;
+}
+
+.template-minimal {
+  font-family: 'Helvetica', sans-serif;
+}
+
+/* Additional template-specific styles can be added here */

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash-8b",
+      model: "gemini-2.0-flash",
       systemInstruction: `
         You are an AI resume assistant that helps users improve and build their resume.
         Always respond with a JSON object having exactly two keys:
@@ -83,14 +83,19 @@ export async function POST(req: NextRequest) {
     const userMsg = { role: "user", parts: [{ text: latestUserMessage }] };
     const modelMsg = { role: "model", parts: [{ text: acknowledgement }] };
 
-    const existingChat = await db.chat.findUnique({ where: { id: chatId } });
+    const existingChat = await db.chat.findUnique({ 
+      where: { 
+        id: chatId,
+        userId: session.user.id // Added check to ensure user owns this chat
+      } 
+    });
 
     if (!existingChat) {
       await db.chat.create({
         data: {
           id: chatId,
           userId: session.user.id,
-          title: latestUserMessage.slice(0, 30) || "Untitled Resume Chat",
+          title: latestUserMessage.slice(0, 30) || "New ResumeMax Chat",
           messages: [userMsg, modelMsg],
           resumeData: updatedResumeData,
           resumeTemplate: "classic",
@@ -98,10 +103,13 @@ export async function POST(req: NextRequest) {
       });
     } else {
       await db.chat.update({
-        where: { id: chatId },
+        where: { 
+          id: chatId,
+          userId: session.user.id // Added check to ensure user owns this chat
+        },
         data: {
           messages: {
-            push: [userMsg, modelMsg], // 👈 appending only the new messages
+            push: [userMsg, modelMsg],
           },
           resumeData: updatedResumeData,
         },
@@ -131,6 +139,97 @@ export async function GET() {
   });
 
   return NextResponse.json({ chats });
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { chatId } = await req.json();
+
+    if (!chatId) {
+      return NextResponse.json(
+        { error: "Chat ID is required." },
+        { status: 400 }
+      );
+    }
+
+    // Actually delete the chat, checking user ownership
+    const deletedChat = await db.chat.deleteMany({
+      where: {
+        id: chatId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!deletedChat.count) {
+      return NextResponse.json(
+        { error: "Chat not found or unauthorized" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Chat deleted successfully." },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Delete chat error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { chatId, newName } = await req.json();
+
+    if (!chatId || !newName) {
+      return NextResponse.json(
+        { error: "Chat ID and new name are required." },
+        { status: 400 }
+      );
+    }
+
+    // Update chat name in the database, checking user ownership
+    const updatedChat = await db.chat.updateMany({
+      where: {
+        id: chatId,
+        userId: session.user.id,
+      },
+      data: {
+        title: newName,
+      },
+    });
+
+    if (!updatedChat.count) {
+      return NextResponse.json(
+        { error: "Chat not found or unauthorized" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Chat name updated successfully." },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Update chat error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

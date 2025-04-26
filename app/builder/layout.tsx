@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
-import db from "@/prisma/prisma";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export default async function BuilderLayout({
   children,
@@ -16,25 +16,22 @@ export default async function BuilderLayout({
     redirect("/signin");
   }
 
-  // Fetch the chat list ONLY here in the layout
-  const chats = await db.chat.findMany({
-    where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      title: true,
-    },
-  });
-
   return (
     <main suppressHydrationWarning>
-      <SidebarProvider>
-        <AppSidebar chats={chats} />
-        <main className="bg-black p-2">
-          <SidebarTrigger />
-        </main>
-        {children}
-      </SidebarProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <SidebarProvider>
+          <AppSidebar session={session} />
+          <main className="bg-gray-100 text-black dark:bg-black dark:text-white">
+            <SidebarTrigger className="p-0" />
+          </main>
+          {children}
+        </SidebarProvider>
+      </ThemeProvider>
     </main>
   );
 }

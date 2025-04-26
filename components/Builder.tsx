@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Send, Loader2, User, Bot } from "lucide-react";
+import { useTheme } from "next-themes";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { redirect } from "next/navigation";
 import { ResumeData } from "@/utils/types";
@@ -19,7 +19,9 @@ export default function BuilderPage({ session, params, initialChatData }) {
   if (!session) redirect("/signin");
   const { id } = params;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [resumeData, setResumeData] = useState<ResumeData>(initialChatData?.resumeData || getEmptyResume());
+  const [resumeData, setResumeData] = useState<ResumeData>(
+    initialChatData?.resumeData || getEmptyResume()
+  );
   const [isGenerating, setIsGenerating] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   // Use initialChatData to decide initial state
@@ -119,34 +121,78 @@ export default function BuilderPage({ session, params, initialChatData }) {
     }
   };
 
+  const { theme } = useTheme();
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 w-full h-screen bg-black text-white overflow-hidden">
+    <div
+      className={`grid grid-cols-1 md:grid-cols-2 w-full h-screen ${
+        theme === "dark" ? "bg-black text-white" : "bg-gray-100 text-black"
+      } overflow-hidden`}
+    >
+    
       {/* Chat Section - Left Column */}
-      <div className="flex flex-col h-screen border-r border-gray-800">
+      <div
+        className={`flex flex-col h-screen border-r ${
+          theme === "dark" ? "border-gray-800" : "border-gray-300"
+        }`}
+      >
         {/* Messages area - scrollable */}
         <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full p-4">
+          <ScrollArea
+            className={`h-full p-4 pl-0 ${
+              theme === "dark"
+                ? "scrollbar-thin scrollbar-thumb-gray-700"
+                : "scrollbar-thin scrollbar-thumb-gray-300"
+            }`}
+          >
             <div className="space-y-4 pb-4">
               {messages?.map((message, index) => (
                 <div
                   key={index}
-                  className={cn(
-                    "backdrop-blur-md bg-white/5 border border-white/10 p-4 rounded-2xl w-max",
+                  className={`w-full max-w-[85%] flex items-center gap-2 ${
                     message.role === "user"
-                      ? "ml-auto text-right"
-                      : "mr-auto text-left"
-                  )}
+                      ? "ml-auto flex-row-reverse text-right"
+                      : "mr-auto flex-row text-left"
+                  }`}
                 >
-                  {message.parts.map((part, i) => (
-                    <p key={i} className="whitespace-pre-wrap text-sm">
-                      {part.text}
-                    </p>
-                  ))}
+                  <div>
+                    {message.role === "user" ? (
+                      <User
+                        className={`h-4 w-4 ${
+                          theme === "dark" ? "text-white" : "text-black"
+                        }`}
+                      />
+                    ) : (
+                      <Bot
+                        className={`h-4 w-4 ${
+                          theme === "dark" ? "text-white" : "text-black"
+                        }`}
+                      />
+                    )}
+                  </div>
+                  <div>
+                    {message.parts.map((part, i) => (
+                      <p
+                        key={i}
+                        className={`whitespace-pre-wrap text-sm backdrop-blur-md ${
+                          theme === "dark"
+                            ? "bg-white/10 border-white/20"
+                            : "bg-gray-200 border-white/10"
+                        } p-4 rounded-2xl`}
+                      >
+                        {part.text}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               ))}
               {isGenerating && (
                 <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl max-w-[80%] mr-auto flex items-center gap-2 text-sm">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2
+                    className={`h-4 w-4 animate-spin ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  />
                   Generating response...
                 </div>
               )}
@@ -156,17 +202,31 @@ export default function BuilderPage({ session, params, initialChatData }) {
         </div>
 
         {/* Input area - fixed at bottom */}
-        <div className="p-4 border-t border-gray-800 bg-black">
+        <div
+          className={`p-4 border mr-6 mb-4 rounded-lg ${
+            theme === "dark"
+              ? "border-gray-700 bg-black"
+              : "border-gray-200 bg-white"
+          }`}
+        >
           <div className="flex items-end gap-2">
             <Textarea
               placeholder="Start chatting to create your resume"
-              className="min-h-[80px] bg-white/5 border-white/10 text-white placeholder:text-white/50"
+              className={`min-h-[80px] ${
+                theme === "dark"
+                  ? "bg-white/5 text-white placeholder:text-white/50 border-white/10"
+                  : "bg-white/80 text-black placeholder:text-black/50 border-black/10"
+              }`}
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyDown}
             />
             <Button
-              className="bg-white text-black hover:bg-gray-300"
+              className={`${
+                theme === "dark"
+                  ? "bg-gray-800 text-white hover:bg-gray-700"
+                  : "bg-white text-black hover:bg-gray-200"
+              }`}
               onClick={handleSendMessage}
               disabled={isGenerating || !inputMessage.trim()}
             >
@@ -175,9 +235,8 @@ export default function BuilderPage({ session, params, initialChatData }) {
           </div>
         </div>
       </div>
-
       {/* Resume Preview Section - Right Column */}
-      <div className="hidden md:block h-screen bg-zinc-950 overflow-hidden">
+      <div className="hidden md:block h-screen bg-neutral overflow-hidden">
         <ScrollArea className="h-full">
           {showResume ? (
             <ResumeDisplay
@@ -191,10 +250,10 @@ export default function BuilderPage({ session, params, initialChatData }) {
               }
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-center p-10">
-              <div className="space-y-6 text-white">
+            <div className="w-full h-full flex items-center justify-center text-center p-10 dark:text-white text-black">
+              <div className="space-y-6 ">
                 <h1 className="text-4xl font-bold">Welcome to ResumeMax 👋</h1>
-                <p className="text-lg text-white/70 max-w-xl mx-auto">
+                <p className="text-lg max-w-xl mx-auto">
                   Start chatting with our AI assistant to begin building your
                   perfect resume. Just type your first message and let the magic
                   unfold.
