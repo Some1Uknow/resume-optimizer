@@ -3,13 +3,15 @@
     "builds": [
       {
         "src": "package.json",
-        "use": "@vercel/node"
+        "use": "@vercel/node",
+        "config": { "nodeVersion": "18.x" }
       }
     ],
     "functions": {
       "api/generate-pdf": {
         "memory": 3008,
         "maxDuration": 30,
+        "handler": "api/generate-pdf/route.ts",
         "includeFiles": "node_modules/@sparticuz/chromium/**"
       }
     },
@@ -19,5 +21,8 @@
         "methods": ["POST"],
         "dest": "/api/generate-pdf"
       }
-    ]
+    ],
+    "env": {
+      "NODE_ENV": "production"
+    }
   }
