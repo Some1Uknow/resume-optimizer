@@ -47,11 +47,20 @@ export async function POST(request: Request) {
     // Launch Puppeteer
 
     const browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
+      args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+      defaultViewport: chromium.defaultViewport,
+      executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath(),
+      headless: true,
+    //  ignoreHTTPSErrors: true
     });
     const page = await browser.newPage();
+
+    // Set viewport for consistent rendering
+    await page.setViewport({
+      width: 1200,
+      height: 1600,
+      deviceScaleFactor: 1,
+    });
 
     // Set the HTML content and wait for it to load
     await page.setContent(html, { waitUntil: "networkidle0" });
