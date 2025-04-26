@@ -5,6 +5,7 @@
             "src": "package.json",
             "use": "@vercel/node",
             "config": {
+                "nodeVersion": "22.x",
                 "includeFiles": [
                     "node_modules/@sparticuz/chromium/**"
                 ]
