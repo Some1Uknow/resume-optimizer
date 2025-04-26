@@ -1,14 +1,28 @@
 // app/api/generate-pdf/route.ts
 import { NextResponse } from "next/server";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium"; // Ensure this is installed
 
 // Import React and ReactDOMServer with require() instead of import
-const React = require('react');
-const ReactDOMServer = require('react-dom/server');
+const React = require("react");
+const ReactDOMServer = require("react-dom/server");
 // Need to import createElement specifically
 const { createElement } = React;
 // Import the component using require
-const { ResumeContent } = require('@/components/resume/ResumeContent');
+const { ResumeContent } = require("@/components/resume/ResumeContent");
+
+const getChromePath = async () => {
+  if (process.env.NODE_ENV === "development") {
+    // Local dev paths (adjust for your OS)
+    const paths = [
+      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // macOS
+      "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", // Windows
+      "/usr/bin/google-chrome-stable", // Linux
+    ];
+    return paths.find((path) => require("fs").existsSync(path));
+  }
+  return chromium.executablePath(); // Production (Vercel)
+};
 
 export async function POST(request: Request) {
   try {
@@ -20,12 +34,23 @@ export async function POST(request: Request) {
 
     // Render without JSX syntax, using createElement instead
     const resumeHtml = ReactDOMServer.renderToString(
-      createElement(ResumeContent, { 
-        data: data, 
-        isEditable: false, 
-        template: template 
+      createElement(ResumeContent, {
+        data: data,
+        isEditable: false,
+        template: template,
       })
     );
+
+    const browser = await puppeteer.launch({
+      executablePath: await getChromePath(),
+      args:
+        process.env.NODE_ENV === "production"
+          ? chromium.args
+          : ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
+    });
+
+    const page = await browser.newPage();
 
     // Create a full HTML document with Tailwind CSS
     const html = `
@@ -43,15 +68,15 @@ export async function POST(request: Request) {
       </html>
     `;
 
-    // Launch Puppeteer
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    await page.setContent(html, {
+      waitUntil: ["domcontentloaded", "networkidle0"],
     });
-    const page = await browser.newPage();
+    await page.emulateMediaType("screen");
 
+    // Add network idle wait
+    await page.waitForNetworkIdle();
     // Set the HTML content and wait for it to load
-    await page.setContent(html, { waitUntil: "networkidle0" });
+    //  await page.setContent(html, { waitUntil: "networkidle0" });
 
     // Generate PDF
     const pdfBuffer = await page.pdf({
@@ -78,3 +103,4 @@ export async function POST(request: Request) {
 }
 
 export const runtime = "nodejs"; // Ensure Node.js runtime for Puppeteer
+export const dynamic = "force-dynamic"; // Force dynamic rendering for this route
