@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && puppeteer browsers install && next build",
-    "postinstall": "chromium install --log-level=info",
     "start": "next start",
     "lint": "next lint"
   },
