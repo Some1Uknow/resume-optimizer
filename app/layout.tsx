@@ -1,25 +1,32 @@
-import type React from "react"
-import "@/app/globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import type React from "react";
+import "@/app/globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "ResumeMax - AI-Powered Resume Builder",
-  description: "Create perfect resumes with AI. Type naturally, watch your resume build in real-time.",
-}
+  description:
+    "Create perfect resumes with AI. Type naturally, watch your resume build in real-time.",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
-
