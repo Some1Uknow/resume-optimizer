@@ -1,6 +1,6 @@
 // app/api/generate-pdf/route.ts
 import { NextResponse } from "next/server";
-import puppeteer, { executablePath } from "puppeteer";
+import puppeteer from "puppeteer";
 
 // Import React and ReactDOMServer with require() instead of import
 const React = require("react");
