@@ -20,15 +20,15 @@ export default async function BuilderLayout({
     <main suppressHydrationWarning>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
+        defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
       >
         <SidebarProvider>
           <AppSidebar session={session} />
-          <main className="bg-gray-100 text-black dark:bg-black dark:text-white">
-            <SidebarTrigger className="p-0" />
-          </main>
+          <section className="bg-gray-50 dark:bg-gray-950">
+            <SidebarTrigger />
+          </section>
           {children}
         </SidebarProvider>
       </ThemeProvider>
