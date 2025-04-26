@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     let path = "/usr/bin/google-chrome";
     if (process.env.NODE_ENV === "production") {
       path =
-        "/vercel/.cache/puppeteer/chrome/linux-135.0.7049.114/chrome-linux64/chrome";
+        "/vercel/.cache/puppeteer/chrome/linux-135.0.7049.114/chrome-linux64/chrome.exe";
     }
 
     const browser = await puppeteer.launch({
