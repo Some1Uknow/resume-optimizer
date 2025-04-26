@@ -1,8 +1,24 @@
 {
+    "version": 2,
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@vercel/node",
+            "config": {
+                "nodeVersion": "18.x",
+                "includeFiles": [
+                    "node_modules/@sparticuz/chromium/**"
+                ]
+            }
+        }
+    ],
     "functions": {
         "app/api/generate-pdf/**/*.ts": {
             "memory": 1024,
             "maxDuration": 60
         }
+    },
+    "env": {
+        "CHROMIUM_URL": "https://github.com/Sparticuz/chromium/releases/download/v119.0.2/chromium-v119.0.2-pack.tar"
     }
 }
