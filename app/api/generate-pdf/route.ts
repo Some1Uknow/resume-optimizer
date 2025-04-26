@@ -1,6 +1,7 @@
 // app/api/generate-pdf/route.ts
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium"; // Ensure you have this package installed
 
 // Import React and ReactDOMServer with require() instead of import
 const React = require("react");
@@ -45,16 +46,10 @@ export async function POST(request: Request) {
 
     // Launch Puppeteer
 
-    let path = "/usr/bin/google-chrome";
-    if (process.env.NODE_ENV === "production") {
-      path =
-        "/vercel/.cache/puppeteer/chrome/linux-135.0.7049.114/chrome-linux64/chrome.exe";
-    }
-
     const browser = await puppeteer.launch({
-      executablePath: path,
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
     const page = await browser.newPage();
 
