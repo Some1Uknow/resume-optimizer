@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2, User, Bot, FileText } from "lucide-react";
-import { useTheme } from "next-themes";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { redirect } from "next/navigation";
 import { ResumeData } from "@/utils/types";
@@ -117,7 +116,6 @@ export default function BuilderPage({ session, params, initialChatData }) {
     }
   };
 
-  const { theme } = useTheme();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full h-screen bg-gray-50 dark:bg-gray-950 text-black dark:text-white overflow-hidden">
