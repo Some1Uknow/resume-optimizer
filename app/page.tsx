@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -10,14 +12,14 @@ import {
 import Image from "next/image";
 import { ModeToggle } from "@/components/mode-toggle";
 import { v4 as uuidv4 } from "uuid";
-
-export const metadata = {
-  title: "AI-Powered Resume Builder | Create Perfect Resumes Instantly",
-  description: "Create perfect resumes with AI. Our smart resume builder uses AI to optimize your content for ATS systems and hiring managers. Try it free today!",
-};
+import { DemoModal } from "@/components/DemoModal";
+import { useState } from "react";
+import { handleGoogleSignIn } from "@/actions/auth-actions";
+import { Icons } from "@/components/icons";
 
 export default function HomePage() {
   const chatId = uuidv4();
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   return (
     <>
       <script
@@ -26,21 +28,22 @@ export default function HomePage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": "ResumeMax",
-            "applicationCategory": "Resume Builder",
-            "operatingSystem": "Web Browser",
-            "offers": {
+            name: "ResumeMax",
+            applicationCategory: "Resume Builder",
+            operatingSystem: "Web Browser",
+            offers: {
               "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
+              price: "0",
+              priceCurrency: "USD",
             },
-            "description": "AI-powered resume builder that helps create professional resumes optimized for ATS systems.",
-            "aggregateRating": {
+            description:
+              "AI-powered resume builder that helps create professional resumes optimized for ATS systems.",
+            aggregateRating: {
               "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "ratingCount": "1250"
-            }
-          })
+              ratingValue: "4.8",
+              ratingCount: "1250",
+            },
+          }),
         }}
       />
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
@@ -83,18 +86,17 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <Link
-              href="/signin"
-              className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            >
-              Login
-            </Link>
-            <Button
-              asChild
-              className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600 border-0 shadow-md hover:shadow-lg transition-all duration-300"
-            >
-              <Link href={`/builder/${chatId}`}>Get Started</Link>
-            </Button>
+            <form action={handleGoogleSignIn}>
+              <Button
+                variant="outline"
+                type="submit"
+                className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors border-slate-300 dark:border-slate-700"
+              >
+                <Icons.google className="mr-2 h-4 w-4" />
+                Sign in
+              </Button>
+            </form>
+
             <ModeToggle />
           </div>
         </header>
@@ -134,8 +136,9 @@ export default function HomePage() {
                     variant="outline"
                     size="lg"
                     className="rounded-full border-2 border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 shadow-sm hover:shadow-md transition-all duration-300 px-8 py-6 text-lg"
+                    onClick={() => setIsDemoModalOpen(true)}
                   >
-                    <Link href="#demo">See Demo</Link>
+                    See Demo
                   </Button>
                 </div>
               </div>
@@ -169,16 +172,17 @@ export default function HomePage() {
                         <div className="space-y-4">
                           <div className="bg-white dark:bg-slate-700/50 rounded-2xl p-4 shadow-sm">
                             <p className="text-slate-800 dark:text-slate-200">
-                              Tell me about your experience as a software engineer
-                              at Google.
+                              Tell me about your experience as a software
+                              engineer at Google.
                             </p>
                           </div>
                           <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-4 shadow-sm ml-6">
                             <p className="text-slate-800 dark:text-slate-200">
                               I worked at Google from 2018-2022 as a Senior
-                              Software Engineer on the Cloud Platform team. I led
-                              a team of 5 engineers and implemented a new
-                              authentication system that improved security by 40%.
+                              Software Engineer on the Cloud Platform team. I
+                              led a team of 5 engineers and implemented a new
+                              authentication system that improved security by
+                              40%.
                             </p>
                           </div>
                           <div className="bg-white dark:bg-slate-700/50 rounded-2xl p-4 shadow-sm">
@@ -217,7 +221,13 @@ export default function HomePage() {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                               >
-                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <rect
+                                  width="20"
+                                  height="16"
+                                  x="2"
+                                  y="4"
+                                  rx="2"
+                                />
                                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                               </svg>
                               <span>alex@example.com</span>
@@ -262,9 +272,9 @@ export default function HomePage() {
                                   </span>
                                 </div>
                                 <p className="mt-1 text-slate-700 dark:text-slate-300">
-                                  Led a team of 5 engineers on the Cloud Platform.
-                                  Implemented a new authentication system that
-                                  improved security by 40%.
+                                  Led a team of 5 engineers on the Cloud
+                                  Platform. Implemented a new authentication
+                                  system that improved security by 40%.
                                 </p>
                               </div>
                             </div>
@@ -814,11 +824,18 @@ export default function HomePage() {
               </div>
             </div>
             <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 text-center text-slate-600 dark:text-slate-400">
-              <div>© {new Date().getFullYear()} ResumeMax. All rights reserved.</div>
+              <div>
+                © {new Date().getFullYear()} ResumeMax. All rights reserved.
+              </div>
             </div>
           </div>
         </footer>
       </div>
+
+      <DemoModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+      />
     </>
   );
 }

@@ -3,12 +3,24 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Loader2, User, Bot, FileText } from "lucide-react";
+import { Send, Loader2, User, Bot, FileText, Plus, MessageSquare, MoreVertical, Settings, LogOut } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { redirect } from "next/navigation";
 import { ResumeData } from "@/utils/types";
 import { ResumeDisplay } from "@/components/resume/ResumeDisplay";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChatModal } from "@/components/chat-modal";
+import { ModeToggle } from "@/components/mode-toggle";
+import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
+import { signOut } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 interface ChatMessage {
   role: "user" | "model";
@@ -18,6 +30,7 @@ interface ChatMessage {
 export default function BuilderPage({ session, params, initialChatData }) {
   if (!session) redirect("/signin");
   const { id } = params;
+  const router = useRouter();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [resumeData, setResumeData] = useState<ResumeData>(
     initialChatData?.resumeData || getEmptyResume()
@@ -26,6 +39,7 @@ export default function BuilderPage({ session, params, initialChatData }) {
   const [inputMessage, setInputMessage] = useState("");
   const [showResume, setShowResume] = useState(() => !!initialChatData);
   const [hasInteracted, setHasInteracted] = useState(() => !!initialChatData || messages.length > 0);
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -108,7 +122,6 @@ export default function BuilderPage({ session, params, initialChatData }) {
       setIsGenerating(false);
     }
   };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -116,18 +129,84 @@ export default function BuilderPage({ session, params, initialChatData }) {
     }
   };
 
+  const handleNewChat = () => {
+    const newChatId = uuidv4();
+    router.push(`/builder/${newChatId}`);
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 w-full h-screen bg-gray-50 dark:bg-gray-950 text-black dark:text-white overflow-hidden">
-      {/* Chat Section - Left Column */}
-      <div 
-        ref={chatContainerRef}
-        className={`flex flex-col h-screen border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${
-          hasInteracted ? "md:col-span-1" : "md:col-span-2"
-        }`}
-      >
-        {/* Messages area - scrollable */}
-        <div className="flex-1 overflow-hidden relative bg-gray-50 dark:bg-gray-950">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-950 text-black dark:text-white">
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div className="flex items-center gap-4">
+          <h1 className="font-semibold text-xl tracking-tight">ResumeMax</h1>
+          <Button
+            variant="default"
+            onClick={handleNewChat}
+            className="flex items-center gap-2 h-9"
+          >
+            <Plus className="h-4 w-4" />
+            <span>New Chat</span>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setIsChatModalOpen(true)}
+            className="flex items-center gap-2 h-9"
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span>Chats</span>
+          </Button>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <ModeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2 h-10 hover:bg-secondary/80"
+              >
+                <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                  <Image
+                    src={session?.user.image}
+                    height={32}
+                    width={32}
+                    className="w-8 h-8 rounded-full"
+                    alt="User Avatar"
+                  />
+                </div>
+                <div className="flex flex-col items-start">
+                  <p className="text-sm font-medium">{session?.user.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {session?.user.email}
+                  </p>
+                </div>
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem>
+                <Settings className="h-4 w-4 mr-2" /> Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => signOut({ redirectTo: "/" })}
+                className="text-destructive focus:text-destructive"
+              >
+                <LogOut className="h-4 w-4 mr-2" /> Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>      {/* Main Content */}
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 overflow-hidden min-h-0">
+        {/* Chat Section - Left Column */}
+        <div 
+          ref={chatContainerRef}
+          className={`flex flex-col h-full min-h-0 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${
+            hasInteracted ? "md:col-span-1" : "md:col-span-2"
+          }`}
+        >        {/* Messages area - scrollable */}
+        <div className="flex-1 relative bg-gray-50 dark:bg-gray-950 min-h-0 overflow-hidden">
           {/* Welcome overlay - shown when no messages */}
           <AnimatePresence>
             {!hasInteracted && (
@@ -173,9 +252,9 @@ export default function BuilderPage({ session, params, initialChatData }) {
               </motion.div>
             )}
           </AnimatePresence>
-
-          <ScrollArea className="h-full p-6 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 bg-gray-50 dark:bg-gray-950">
-            <div className="space-y-6 pb-4">
+          
+          <ScrollArea className="h-full w-full">
+            <div className="p-6 space-y-6 pb-4 min-h-full">
               {messages?.map((message, index) => (
                 <motion.div
                   key={index}
@@ -230,10 +309,8 @@ export default function BuilderPage({ session, params, initialChatData }) {
               <div ref={messagesEndRef} />
             </div>
           </ScrollArea>
-        </div>
-
-        {/* Input area - fixed at bottom */}
-        <div className="p-6 bg-gray-50 dark:bg-gray-950">
+        </div>        {/* Input area - fixed at bottom */}
+        <div className="p-6 bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 flex-shrink-0">
           <div className="relative bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
             <Textarea
               placeholder="Type your message here..."
@@ -253,8 +330,7 @@ export default function BuilderPage({ session, params, initialChatData }) {
           </div>
         </div>
       </div>
-      
-      {/* Resume Preview Section - Right Column */}
+        {/* Resume Preview Section - Right Column */}
       <AnimatePresence>
         {hasInteracted && (
           <motion.div 
@@ -262,9 +338,9 @@ export default function BuilderPage({ session, params, initialChatData }) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="hidden md:block h-screen overflow-hidden bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800"
+            className="hidden md:flex flex-col h-full min-h-0 overflow-hidden bg-white dark:bg-gray-900"
           >
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between flex-shrink-0">
               <h2 className="font-semibold text-lg">Resume Preview</h2>
               <div className="flex gap-1">
                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
@@ -272,7 +348,8 @@ export default function BuilderPage({ session, params, initialChatData }) {
                 <div className="w-3 h-3 rounded-full bg-green-500"></div>
               </div>
             </div>
-            <ScrollArea className="h-[calc(100vh-57px)]">
+            
+            <ScrollArea className="flex-1 min-h-0">
               {showResume ? (
                 <div className="p-6">
                   <ResumeDisplay
@@ -287,7 +364,7 @@ export default function BuilderPage({ session, params, initialChatData }) {
                   />
                 </div>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-center p-10 text-gray-500 dark:text-gray-400">
+                <div className="flex items-center justify-center h-full text-center p-10 text-gray-500 dark:text-gray-400">
                   <p>Your resume will appear here once generated</p>
                 </div>
               )}
@@ -295,6 +372,13 @@ export default function BuilderPage({ session, params, initialChatData }) {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
+      
+      {/* Chat Modal */}
+      <ChatModal 
+        isOpen={isChatModalOpen} 
+        onClose={() => setIsChatModalOpen(false)} 
+      />
     </div>
   );
 }
