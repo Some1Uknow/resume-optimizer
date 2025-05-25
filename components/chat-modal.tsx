@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   MoreVertical,
   Edit2,
@@ -34,8 +34,14 @@ interface ChatModalProps {
   onClose: () => void;
 }
 
+interface Chat {
+  id: string;
+  title: string;
+  updatedAt: string;
+}
+
 // Helper function to group chats by timeframe
-const groupChatsByTimeframe = (chats) => {
+const groupChatsByTimeframe = (chats: Chat[]) => {
   const now = new Date();
   const lastWeek = new Date(now);
   lastWeek.setDate(now.getDate() - 7);
@@ -56,35 +62,36 @@ const groupChatsByTimeframe = (chats) => {
 };
 
 // Helper function to format dates
-const formatDate = (dateString) => {
+const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const now = new Date();
-  const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 
-  if (diffDays < 7) {
-    return `May ${date.getDate()}`;
+  if (diffDays === 0) {
+    return "Today";
+  } else if (diffDays === 1) {
+    return "Yesterday";
+  } else if (diffDays < 7) {
+    return `${diffDays} days ago`;
   } else {
-    return `May ${date.getDate()}`;
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    });
   }
 };
 
 export function ChatModal({ isOpen, onClose }: ChatModalProps) {
-  const [chats, setChats] = useState([]);
-  const [editingChatId, setEditingChatId] = useState(null);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const editInputRef = useRef(null);
+  const editInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const pathname = usePathname();
 
   // Extract chat ID from the URL path
-  useEffect(() => {
-    if (pathname.startsWith("/builder/")) {
-      const chatId = pathname.split("/builder/")[1];
-   
-    }
-  }, [pathname]);
 
   useEffect(() => {
     async function fetchChats() {
@@ -127,18 +134,11 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
       editInputRef.current.focus();
     }
   }, [editingChatId]);
-
-  const startEditing = (chat) => {
+  const startEditing = (chat: Chat) => {
     setEditingChatId(chat.id);
     setEditValue(chat.title);
   };
-
-  const cancelEditing = () => {
-    setEditingChatId(null);
-    setEditValue("");
-  };
-
-  const saveEditing = async () => {
+  const handleChatRename = async () => {
     if (!editValue.trim()) {
       toast.error("Chat name cannot be empty");
       return;
@@ -158,7 +158,8 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update chat title");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update chat title");
       }
 
       setChats((prevChats) =>
@@ -180,7 +181,11 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
     }
   };
 
-  const handleChatDelete = async (chatId) => {
+  const cancelEditing = () => {
+    setEditingChatId(null);
+    setEditValue("");
+  };
+  const handleChatDelete = async (chatId: string) => {
     if (!confirm("Are you sure you want to delete this chat?")) {
       return;
     }
@@ -196,7 +201,8 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete chat");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete chat");
       }
 
       setChats((prevChats) => prevChats.filter((chat) => chat.id !== chatId));
@@ -214,7 +220,7 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
     }
   };
 
-  const handleChatSelect = (chatId) => {
+  const handleChatSelect = (chatId: string) => {
     router.push(`/builder/${chatId}`);
     onClose();
   };
@@ -274,53 +280,95 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
                     <div>
                       <h3 className="text-sm text-zinc-400 mb-3 font-medium">
                         Last 7 Days
-                      </h3>
-                      <div className="space-y-2">
+                      </h3>                      <div className="space-y-2">
                         {groupedChats.last7Days.map((chat) => (
                           <div
                             key={chat.id}
                             className="flex justify-between items-center p-3 rounded-md hover:bg-zinc-800/50 cursor-pointer group"
-                            onClick={() => handleChatSelect(chat.id)}
+                            onClick={() => {
+                              if (editingChatId !== chat.id) {
+                                handleChatSelect(chat.id);
+                              }
+                            }}
                           >
-                            <span className="text-white font-medium">
-                              {chat.title || "Untitled Chat"}
-                            </span>
-                            <div className="flex items-center gap-2 invisible group-hover:visible">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 hover:bg-zinc-700"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  router.push(`/builder/${chat.id}`);
-                                  onClose();
-                                }}
-                              >
-                                <ExternalLink className="h-4 w-4 text-zinc-400" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 hover:bg-zinc-700"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  startEditing(chat);
-                                }}
-                              >
-                                <Edit2 className="h-4 w-4 text-zinc-400" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 hover:bg-zinc-700"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleChatDelete(chat.id);
-                                }}
-                              >
-                                <Trash2 className="h-4 w-4 text-zinc-400" />
-                              </Button>
+                            <div className="flex-1">
+                              {editingChatId === chat.id ? (
+                                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                  <Input
+                                    ref={editInputRef}
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        handleChatRename();
+                                      } else if (e.key === "Escape") {
+                                        cancelEditing();
+                                      }
+                                    }}
+                                    className="text-white bg-zinc-800 border-zinc-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    placeholder="Enter chat name"
+                                  />
+                                  <Button
+                                    size="sm"
+                                    onClick={handleChatRename}
+                                    disabled={isLoading}
+                                    className="bg-blue-600 hover:bg-blue-700"
+                                  >
+                                    Save
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={cancelEditing}
+                                    className="hover:bg-zinc-700"
+                                  >
+                                    Cancel
+                                  </Button>
+                                </div>
+                              ) : (
+                                <span className="text-white font-medium">
+                                  {chat.title || "Untitled Chat"}
+                                </span>
+                              )}
                             </div>
+                            {editingChatId !== chat.id && (
+                              <div className="flex items-center gap-2 invisible group-hover:visible">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 hover:bg-zinc-700"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    router.push(`/builder/${chat.id}`);
+                                    onClose();
+                                  }}
+                                >
+                                  <ExternalLink className="h-4 w-4 text-zinc-400" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 hover:bg-zinc-700"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    startEditing(chat);
+                                  }}
+                                >
+                                  <Edit2 className="h-4 w-4 text-zinc-400" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 hover:bg-zinc-700"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleChatDelete(chat.id);
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4 text-zinc-400" />
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -331,58 +379,100 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
                     <div>
                       <h3 className="text-sm text-zinc-400 mb-3 font-medium">
                         This Year
-                      </h3>
-                      <div className="space-y-2">
+                      </h3>                      <div className="space-y-2">
                         {groupedChats.thisYear.map((chat) => (
                           <div
                             key={chat.id}
                             className="flex justify-between items-center p-3 rounded-md hover:bg-zinc-800/50 cursor-pointer group"
-                            onClick={() => handleChatSelect(chat.id)}
+                            onClick={() => {
+                              if (editingChatId !== chat.id) {
+                                handleChatSelect(chat.id);
+                              }
+                            }}
                           >
                             <div className="flex-1">
-                              <span className="text-white font-medium">
-                                {chat.title || "Untitled Chat"}
-                              </span>
+                              {editingChatId === chat.id ? (
+                                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                  <Input
+                                    ref={editInputRef}
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        handleChatRename();
+                                      } else if (e.key === "Escape") {
+                                        cancelEditing();
+                                      }
+                                    }}
+                                    className="text-white bg-zinc-800 border-zinc-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    placeholder="Enter chat name"
+                                  />
+                                  <Button
+                                    size="sm"
+                                    onClick={handleChatRename}
+                                    disabled={isLoading}
+                                    className="bg-blue-600 hover:bg-blue-700"
+                                  >
+                                    Save
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={cancelEditing}
+                                    className="hover:bg-zinc-700"
+                                  >
+                                    Cancel
+                                  </Button>
+                                </div>
+                              ) : (
+                                <span className="text-white font-medium">
+                                  {chat.title || "Untitled Chat"}
+                                </span>
+                              )}
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="text-sm text-zinc-500">
-                                {formatDate(chat.updatedAt)}
-                              </span>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 opacity-0 group-hover:opacity-100 hover:bg-zinc-700"
-                                    onClick={(e) => e.stopPropagation()}
+                              {editingChatId !== chat.id && (
+                                <span className="text-sm text-zinc-500">
+                                  {formatDate(chat.updatedAt)}
+                                </span>
+                              )}
+                              {editingChatId !== chat.id && (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8 opacity-0 group-hover:opacity-100 hover:bg-zinc-700"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent
+                                    align="end"
+                                    className="bg-zinc-900 border-zinc-800 text-white"
                                   >
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                  align="end"
-                                  className="bg-zinc-900 border-zinc-800 text-white"
-                                >
-                                  <DropdownMenuItem
-                                    className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      startEditing(chat);
-                                    }}
-                                  >
-                                    <Edit2 className="h-4 w-4 mr-2" /> Edit
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem
-                                    className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleChatDelete(chat.id);
-                                    }}
-                                  >
-                                    <Trash2 className="h-4 w-4 mr-2" /> Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        startEditing(chat);
+                                      }}
+                                    >
+                                      <Edit2 className="h-4 w-4 mr-2" /> Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleChatDelete(chat.id);
+                                      }}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" /> Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -396,56 +486,98 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
                         Older
                       </h3>
                       <div className="space-y-2">
-                        {groupedChats.older.map((chat) => (
-                          <div
+                        {groupedChats.older.map((chat) => (                          <div
                             key={chat.id}
                             className="flex justify-between items-center p-3 rounded-md hover:bg-zinc-800/50 cursor-pointer group"
-                            onClick={() => handleChatSelect(chat.id)}
+                            onClick={() => {
+                              if (editingChatId !== chat.id) {
+                                handleChatSelect(chat.id);
+                              }
+                            }}
                           >
                             <div className="flex-1">
-                              <span className="text-white font-medium">
-                                {chat.title || "Untitled Chat"}
-                              </span>
+                              {editingChatId === chat.id ? (
+                                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                  <Input
+                                    ref={editInputRef}
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        handleChatRename();
+                                      } else if (e.key === "Escape") {
+                                        cancelEditing();
+                                      }
+                                    }}
+                                    className="text-white bg-zinc-800 border-zinc-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    placeholder="Enter chat name"
+                                  />
+                                  <Button
+                                    size="sm"
+                                    onClick={handleChatRename}
+                                    disabled={isLoading}
+                                    className="bg-blue-600 hover:bg-blue-700"
+                                  >
+                                    Save
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={cancelEditing}
+                                    className="hover:bg-zinc-700"
+                                  >
+                                    Cancel
+                                  </Button>
+                                </div>
+                              ) : (
+                                <span className="text-white font-medium">
+                                  {chat.title || "Untitled Chat"}
+                                </span>
+                              )}
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="text-sm text-zinc-500">
-                                {formatDate(chat.updatedAt)}
-                              </span>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 opacity-0 group-hover:opacity-100 hover:bg-zinc-700"
-                                    onClick={(e) => e.stopPropagation()}
+                              {editingChatId !== chat.id && (
+                                <span className="text-sm text-zinc-500">
+                                  {formatDate(chat.updatedAt)}
+                                </span>
+                              )}
+                              {editingChatId !== chat.id && (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8 opacity-0 group-hover:opacity-100 hover:bg-zinc-700"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent
+                                    align="end"
+                                    className="bg-zinc-900 border-zinc-800 text-white"
                                   >
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                  align="end"
-                                  className="bg-zinc-900 border-zinc-800 text-white"
-                                >
-                                  <DropdownMenuItem
-                                    className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      startEditing(chat);
-                                    }}
-                                  >
-                                    <Edit2 className="h-4 w-4 mr-2" /> Edit
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem
-                                    className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleChatDelete(chat.id);
-                                    }}
-                                  >
-                                    <Trash2 className="h-4 w-4 mr-2" /> Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        startEditing(chat);
+                                      }}
+                                    >
+                                      <Edit2 className="h-4 w-4 mr-2" /> Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleChatDelete(chat.id);
+                                      }}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" /> Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              )}
                             </div>
                           </div>
                         ))}

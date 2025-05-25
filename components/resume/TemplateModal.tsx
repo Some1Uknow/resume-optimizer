@@ -25,15 +25,14 @@ export const TemplateModal = ({
   onSelectTemplate,
 }: TemplateModalProps) => {
   if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white text-black p-6 rounded-lg max-w-2xl w-full">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Choose Template</h2>
+    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+      <div className="bg-background text-foreground border border-border rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-hidden">
+        <div className="flex justify-between items-center p-6 border-b border-border">
+          <h2 className="text-2xl font-bold text-foreground">Choose Template</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-muted-foreground hover:text-foreground transition-colors rounded-md p-1 hover:bg-accent"
           >
             <svg
               className="w-6 h-6"
@@ -49,27 +48,28 @@ export const TemplateModal = ({
               />
             </svg>
           </button>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {templates.map((template) => (
-            <div
-              key={template.id}
-              className="border rounded-lg p-4 cursor-pointer hover:border-blue-500"
-              onClick={() => {
-                onSelectTemplate(template.id);
-                onClose();
-              }}
-            >
-              <Image
-                height={1000}
-                width={1000}
-                src={template.preview}
-                alt={template.name}
-                className="w-full h-40 object-cover mb-2"
-              />
-              <p className="text-center font-medium">{template.name}</p>
-            </div>
-          ))}
+        </div>        <div className="p-6 overflow-x-auto">
+          <div className="flex gap-6 pb-4">
+            {templates.map((template) => (
+              <div
+                key={template.id}
+                className="flex-shrink-0 border border-border rounded-lg p-4 cursor-pointer hover:border-primary hover:shadow-lg transition-all duration-200 bg-card"
+                onClick={() => {
+                  onSelectTemplate(template.id);
+                  onClose();
+                }}
+              >
+                <Image
+                  height={1000}
+                  width={1000}
+                  src={template.preview}
+                  alt={template.name}
+                  className="w-64 h-auto object-contain mb-3 rounded-md border border-border"
+                />
+                <p className="text-center font-medium text-card-foreground w-64">{template.name}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -42,7 +42,7 @@ async function getBrowser() {
     return puppeteer.launch({
       // Allow custom local paths via environment variable
       executablePath:
-        process.env.CHROME_PATH ||
+        process.env.CHROME_PATH || puppeteer.executablePath() ||
         // Default path for macOS, adjust for other OS if needed
         // Consider using puppeteer.executablePath() here as well for a more robust local setup
         // if you don't want to hardcode paths.
