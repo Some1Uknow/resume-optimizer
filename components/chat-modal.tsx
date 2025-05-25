@@ -4,11 +4,13 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import {
   MoreVertical,
-  Check,
-  X,
   Edit2,
   MessageSquare,
   Loader2,
+  Search,
+
+  ExternalLink,
+  Trash2,
 } from "lucide-react";
 import {
   Dialog,
@@ -32,12 +34,46 @@ interface ChatModalProps {
   onClose: () => void;
 }
 
+// Helper function to group chats by timeframe
+const groupChatsByTimeframe = (chats) => {
+  const now = new Date();
+  const lastWeek = new Date(now);
+  lastWeek.setDate(now.getDate() - 7);
+
+  const lastYear = new Date(now);
+  lastYear.setFullYear(now.getFullYear() - 1);
+
+  return {
+    last7Days: chats.filter((chat) => new Date(chat.updatedAt) > lastWeek),
+    thisYear: chats.filter(
+      (chat) => {
+        const updatedAt = new Date(chat.updatedAt);
+        return updatedAt <= lastWeek && updatedAt > lastYear;
+      }
+    ),
+    older: chats.filter((chat) => new Date(chat.updatedAt) <= lastYear),
+  };
+};
+
+// Helper function to format dates
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 7) {
+    return `May ${date.getDate()}`;
+  } else {
+    return `May ${date.getDate()}`;
+  }
+};
+
 export function ChatModal({ isOpen, onClose }: ChatModalProps) {
   const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(null);
   const [editingChatId, setEditingChatId] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const editInputRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -46,7 +82,7 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
   useEffect(() => {
     if (pathname.startsWith("/builder/")) {
       const chatId = pathname.split("/builder/")[1];
-      setSelectedChat(chatId);
+   
     }
   }, [pathname]);
 
@@ -60,7 +96,12 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
         }
         const data = await response.json();
         if (Array.isArray(data.chats)) {
-          setChats(data.chats);
+          // Add sample dates for demo if they don't exist
+          const chatsWithDates = data.chats.map((chat) => ({
+            ...chat,
+            updatedAt: chat.updatedAt || new Date().toISOString(),
+          }));
+          setChats(chatsWithDates);
         } else {
           console.error("Expected an array but received:", data);
           setChats([]);
@@ -173,170 +214,249 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      saveEditing();
-    } else if (e.key === "Escape") {
-      cancelEditing();
-    }
-  };
-
   const handleChatSelect = (chatId) => {
     router.push(`/builder/${chatId}`);
     onClose();
   };
 
+  const filteredChats = searchQuery
+    ? chats.filter((chat) =>
+        chat.title?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : chats;
+
+  const groupedChats = groupChatsByTimeframe(filteredChats);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-background/95 backdrop-blur-md border-border/50 shadow-2xl">
-        <DialogHeader className="space-y-3 pb-2">
-          <DialogTitle className="flex items-center gap-3 text-xl font-semibold tracking-tight">
-            <div className="p-2 rounded-xl bg-primary/10 text-primary">
-              <MessageSquare className="h-5 w-5" />
-            </div>
+      <DialogContent className="sm:max-w-xl p-6 bg-[#121212] border-zinc-800 text-white overflow-hidden">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="text-xl font-semibold tracking-tight">
             Your Chats
           </DialogTitle>
         </DialogHeader>
-        
-        <div className="space-y-4">
-          <ScrollArea className="h-[420px] w-full">
-            <div className="space-y-3 pr-4">
+
+        <div className="space-y-6">
+          <div className="relative">
+            <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <Input
+              placeholder="Search..."
+              className="pl-10 bg-transparent text-white border-zinc-700 focus-visible:ring-0 focus-visible:ring-offset-0"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <ScrollArea className="h-[420px] pr-4">
+            <div className="space-y-6">
               {isLoading && chats.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary/60" />
-                  <p className="text-sm text-muted-foreground font-medium">
+                  <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+                  <p className="text-sm text-zinc-400 font-medium">
                     Loading your chats...
                   </p>
                 </div>
               ) : chats.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
-                  <div className="p-4 rounded-full bg-muted/30">
-                    <MessageSquare className="h-8 w-8 text-muted-foreground/60" />
+                  <div className="p-4 rounded-full bg-zinc-800/50">
+                    <MessageSquare className="h-8 w-8 text-zinc-400" />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium text-foreground">No chats yet</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-sm font-medium text-white">No chats yet</p>
+                    <p className="text-xs text-zinc-400">
                       Start a conversation to see your chats here
                     </p>
                   </div>
                 </div>
               ) : (
-                chats.map((chat, index) => (
-                  <div
-                    key={chat.id}
-                    className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ease-out hover:shadow-md ${
-                      selectedChat === chat.id
-                        ? "bg-primary/5 border-primary/20 shadow-sm ring-1 ring-primary/10"
-                        : "bg-background/60 border-border/30 hover:bg-muted/30 hover:border-border/60"
-                    }`}
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                      animation: isOpen ? 'slideInUp 0.3s ease-out forwards' : 'none'
-                    }}
-                  >
-                    {editingChatId === chat.id ? (
-                      <div className="flex items-center gap-3 w-full">
-                        <Input
-                          ref={editInputRef}
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          className="h-9 flex-1 bg-background/80 border-border/60 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary/20 transition-all duration-200"
-                          disabled={isLoading}
-                          placeholder="Enter chat name..."
-                        />
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={saveEditing}
-                            disabled={isLoading}
-                            className="h-9 w-9 hover:bg-green-500/10 hover:text-green-600 transition-all duration-200"
+                <>
+                  {groupedChats.last7Days.length > 0 && (
+                    <div>
+                      <h3 className="text-sm text-zinc-400 mb-3 font-medium">
+                        Last 7 Days
+                      </h3>
+                      <div className="space-y-2">
+                        {groupedChats.last7Days.map((chat) => (
+                          <div
+                            key={chat.id}
+                            className="flex justify-between items-center p-3 rounded-md hover:bg-zinc-800/50 cursor-pointer group"
+                            onClick={() => handleChatSelect(chat.id)}
                           >
-                            {isLoading ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Check className="h-4 w-4" />
-                            )}
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={cancelEditing}
-                            disabled={isLoading}
-                            className="h-9 w-9 hover:bg-red-500/10 hover:text-red-600 transition-all duration-200"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
+                            <span className="text-white font-medium">
+                              {chat.title || "Untitled Chat"}
+                            </span>
+                            <div className="flex items-center gap-2 invisible group-hover:visible">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-zinc-700"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  router.push(`/builder/${chat.id}`);
+                                  onClose();
+                                }}
+                              >
+                                <ExternalLink className="h-4 w-4 text-zinc-400" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-zinc-700"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  startEditing(chat);
+                                }}
+                              >
+                                <Edit2 className="h-4 w-4 text-zinc-400" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-zinc-700"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleChatDelete(chat.id);
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4 text-zinc-400" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ) : (
-                      <>
-                        <div
-                          onClick={() => handleChatSelect(chat.id)}
-                          className="flex-1 cursor-pointer group/text"
-                        >
-                          <div className={`text-sm font-medium transition-all duration-200 group-hover/text:text-primary ${
-                            selectedChat === chat.id ? "text-primary" : "text-foreground"
-                          }`}>
-                            {chat.title || "Untitled Chat"}
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            Click to open
-                          </div>
-                        </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              disabled={isLoading}
-                              className="h-9 w-9 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-muted/60 hover:scale-105"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent 
-                            align="end" 
-                            className="w-52 bg-background/95 backdrop-blur-md border-border/50 shadow-xl"
+                    </div>
+                  )}
+
+                  {groupedChats.thisYear.length > 0 && (
+                    <div>
+                      <h3 className="text-sm text-zinc-400 mb-3 font-medium">
+                        This Year
+                      </h3>
+                      <div className="space-y-2">
+                        {groupedChats.thisYear.map((chat) => (
+                          <div
+                            key={chat.id}
+                            className="flex justify-between items-center p-3 rounded-md hover:bg-zinc-800/50 cursor-pointer group"
+                            onClick={() => handleChatSelect(chat.id)}
                           >
-                            <DropdownMenuItem
-                              onClick={() => startEditing(chat)}
-                              className="hover:bg-primary/5 focus:bg-primary/5 transition-colors duration-150"
-                            >
-                              <Edit2 className="h-4 w-4 mr-3 text-primary/70" /> 
-                              <span className="font-medium">Rename</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleChatDelete(chat.id)}
-                              className="text-destructive focus:text-destructive hover:bg-destructive/5 focus:bg-destructive/5 transition-colors duration-150"
-                            >
-                              <X className="h-4 w-4 mr-3" /> 
-                              <span className="font-medium">Delete</span>
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </>
-                    )}
-                  </div>
-                ))
+                            <div className="flex-1">
+                              <span className="text-white font-medium">
+                                {chat.title || "Untitled Chat"}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm text-zinc-500">
+                                {formatDate(chat.updatedAt)}
+                              </span>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 opacity-0 group-hover:opacity-100 hover:bg-zinc-700"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                  align="end"
+                                  className="bg-zinc-900 border-zinc-800 text-white"
+                                >
+                                  <DropdownMenuItem
+                                    className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      startEditing(chat);
+                                    }}
+                                  >
+                                    <Edit2 className="h-4 w-4 mr-2" /> Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleChatDelete(chat.id);
+                                    }}
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" /> Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {groupedChats.older.length > 0 && (
+                    <div>
+                      <h3 className="text-sm text-zinc-400 mb-3 font-medium">
+                        Older
+                      </h3>
+                      <div className="space-y-2">
+                        {groupedChats.older.map((chat) => (
+                          <div
+                            key={chat.id}
+                            className="flex justify-between items-center p-3 rounded-md hover:bg-zinc-800/50 cursor-pointer group"
+                            onClick={() => handleChatSelect(chat.id)}
+                          >
+                            <div className="flex-1">
+                              <span className="text-white font-medium">
+                                {chat.title || "Untitled Chat"}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm text-zinc-500">
+                                {formatDate(chat.updatedAt)}
+                              </span>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 opacity-0 group-hover:opacity-100 hover:bg-zinc-700"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                  align="end"
+                                  className="bg-zinc-900 border-zinc-800 text-white"
+                                >
+                                  <DropdownMenuItem
+                                    className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      startEditing(chat);
+                                    }}
+                                  >
+                                    <Edit2 className="h-4 w-4 mr-2" /> Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    className="cursor-pointer text-white focus:bg-zinc-800 focus:text-white"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleChatDelete(chat.id);
+                                    }}
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" /> Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </ScrollArea>
         </div>
-        
-        <style jsx>{`
-          @keyframes slideInUp {
-            from {
-              opacity: 0;
-              transform: translateY(10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}</style>
       </DialogContent>
     </Dialog>
   );
