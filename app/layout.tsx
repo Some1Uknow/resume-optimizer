@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: 'ResumeMax - AI-Powered Resume Builder',
     description: 'Create perfect resumes with AI. Type naturally, watch your resume build in real-time.',
     images: [{
-      url: '/opengraph-image.png',
+      url: '/opengraph-image',
       width: 1200,
       height: 630,
       alt: 'ResumeMax - AI Resume Builder'
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ResumeMax - AI-Powered Resume Builder',
     description: 'Create perfect resumes with AI. Type naturally, watch your resume build in real-time.',
-    images: ['/opengraph-image.png'],
+    images: ['/twitter-image'],
     creator: '@resumemax',
   },
   manifest: '/site.webmanifest',
