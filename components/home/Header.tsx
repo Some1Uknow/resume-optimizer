@@ -8,9 +8,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Icons } from "@/components/icons";
 import { SignInModal } from "@/components/ui/sign-in-modal";
 
-interface HeaderProps {}
-
-export function Header({}: HeaderProps) {
+export function Header() {
   const [showSignInModal, setShowSignInModal] = useState(false);
 
   const handleSignInClick = () => {
