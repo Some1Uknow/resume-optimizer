@@ -7,7 +7,7 @@ import { User, Bot, Loader2, FileText } from "lucide-react";
 import { ChatMessage } from "@/types/chat";
 import { ANIMATION_VARIANTS } from "@/constants/resume";
 
-const WelcomeOverlay = memo(() => (
+const WelcomeOverlay = memo(({ onSuggestionClick }: { onSuggestionClick?: (suggestion: string) => void }) => (
   <motion.div
     {...ANIMATION_VARIANTS.welcome}
     className="absolute inset-0 flex items-center justify-center z-10"
@@ -22,25 +22,27 @@ const WelcomeOverlay = memo(() => (
           What can I help you refine?
         </h1>
       </motion.div>
-      
+
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6 }}
         className="flex flex-wrap justify-center gap-3 mt-12"
       >
-        <button className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg text-sm border border-border transition-colors flex items-center gap-2">
-          Create a professional resume
-          <span className="text-muted-foreground">↗</span>
-        </button>
-        <button className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg text-sm border border-border transition-colors flex items-center gap-2">
-          Improve my work experience section
-          <span className="text-muted-foreground">↗</span>
-        </button>
-        <button className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg text-sm border border-border transition-colors flex items-center gap-2">
-          Optimize for tech industry
-          <span className="text-muted-foreground">↗</span>
-        </button>
+        {[
+          "Build a Resume for Backend Developer",
+          "Build a resume for an AI/ML Engineer",
+          "Build a resume for a Full Stack Engineer",
+        ].map((prompt, index) => (
+          <button
+            key={index}
+            onClick={() => onSuggestionClick?.(prompt)}
+            className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg text-sm border border-border transition-colors flex items-center gap-2"
+          >
+            {prompt}
+            <span className="text-muted-foreground">↗</span>
+          </button>
+        ))}
       </motion.div>
     </div>
   </motion.div>
@@ -101,9 +103,7 @@ const LoadingMessage = memo(() => (
     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
       <Loader2 className="h-4 w-4 animate-spin text-purple-600 dark:text-purple-300" />
     </div>
-    <span className="text-muted-foreground">
-      Generating response...
-    </span>
+    <span className="text-muted-foreground">Generating response...</span>
   </motion.div>
 ));
 
@@ -113,9 +113,15 @@ interface ChatMessagesProps {
   messages: ChatMessage[];
   isGenerating: boolean;
   hasInteracted: boolean;
+  onSuggestionClick?: (suggestion: string) => void;
 }
 
-export const ChatMessages = ({ messages, isGenerating, hasInteracted }: ChatMessagesProps) => {
+export const ChatMessages = ({
+  messages,
+  isGenerating,
+  hasInteracted,
+  onSuggestionClick,
+}: ChatMessagesProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -128,9 +134,7 @@ export const ChatMessages = ({ messages, isGenerating, hasInteracted }: ChatMess
 
   return (
     <div className="flex-1 relative bg-background min-h-0 overflow-hidden">
-      <AnimatePresence>
-        {!hasInteracted && <WelcomeOverlay />}
-      </AnimatePresence>
+      <AnimatePresence>{!hasInteracted && <WelcomeOverlay onSuggestionClick={onSuggestionClick} />}</AnimatePresence>
 
       <ScrollArea className="h-full w-full">
         <div className="p-6 space-y-6 pb-4 min-h-full">

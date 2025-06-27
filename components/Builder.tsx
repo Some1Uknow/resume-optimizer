@@ -20,6 +20,7 @@ export default function BuilderPage({ session, params, initialChatData }) {
   const { id } = params;
   const router = useRouter();
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
   const {
     messages,
@@ -39,9 +40,14 @@ export default function BuilderPage({ session, params, initialChatData }) {
   const handleSendMessage = useCallback(
     (message: string) => {
       sendMessage(message, id);
+      setInputValue(""); // Clear input after sending
     },
     [sendMessage, id]
   );
+
+  const handleSuggestionClick = useCallback((suggestion: string) => {
+    setInputValue(suggestion);
+  }, []);
 
   const toggleChatModal = useCallback(() => {
     setIsChatModalOpen((prev) => !prev);
@@ -69,10 +75,13 @@ export default function BuilderPage({ session, params, initialChatData }) {
             messages={messages}
             isGenerating={isGenerating}
             hasInteracted={hasInteracted}
+            onSuggestionClick={handleSuggestionClick}
           />
           <ChatInput
             onSendMessage={handleSendMessage}
             isGenerating={isGenerating}
+            inputValue={inputValue}
+            onInputChange={setInputValue}
           />
         </div>
 
@@ -83,7 +92,9 @@ export default function BuilderPage({ session, params, initialChatData }) {
               className="hidden md:flex flex-col h-full min-h-0 overflow-hidden bg-card border-l border-border"
             >
               <div className="px-6 py-4 border-b border-border flex items-center justify-between flex-shrink-0">
-                <h2 className="font-semibold text-lg text-foreground">Resume Preview</h2>
+                <h2 className="font-semibold text-lg text-foreground">
+                  Resume Preview
+                </h2>
                 <div className="flex gap-1">
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
                   <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
