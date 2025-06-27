@@ -49,14 +49,14 @@ export default function BuilderPage({ session, params, initialChatData }) {
 
   const chatColumnClass = useMemo(
     () =>
-      `flex flex-col h-full min-h-0 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${
+      `flex flex-col h-full min-h-0 transition-all duration-300 ${
         hasInteracted ? "md:col-span-1" : "md:col-span-2"
       }`,
     [hasInteracted]
   );
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-950 text-black dark:text-white">
+    <div className="flex flex-col h-screen bg-background text-foreground">
       <ChatHeader
         session={session}
         onNewChat={handleNewChat}
@@ -80,10 +80,10 @@ export default function BuilderPage({ session, params, initialChatData }) {
           {hasInteracted && (
             <motion.div
               {...ANIMATION_VARIANTS.resume}
-              className="hidden md:flex flex-col h-full min-h-0 overflow-hidden bg-white dark:bg-gray-900"
+              className="hidden md:flex flex-col h-full min-h-0 overflow-hidden bg-card border-l border-border"
             >
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between flex-shrink-0">
-                <h2 className="font-semibold text-lg">Resume Preview</h2>
+              <div className="px-6 py-4 border-b border-border flex items-center justify-between flex-shrink-0">
+                <h2 className="font-semibold text-lg text-foreground">Resume Preview</h2>
                 <div className="flex gap-1">
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
                   <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -100,7 +100,7 @@ export default function BuilderPage({ session, params, initialChatData }) {
                     />
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center h-full text-center p-10 text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center justify-center h-full text-center p-10 text-muted-foreground">
                     <p>Your resume will appear here once generated</p>
                   </div>
                 )}

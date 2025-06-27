@@ -10,41 +10,37 @@ import { ANIMATION_VARIANTS } from "@/constants/resume";
 const WelcomeOverlay = memo(() => (
   <motion.div
     {...ANIMATION_VARIANTS.welcome}
-    className="absolute inset-0 flex items-center justify-center z-10 bg-gradient-to-b from-gray-50 to-gray-50 dark:from-gray-950 dark:to-gray-950"
+    className="absolute inset-0 flex items-center justify-center z-10"
   >
-    <div className="text-center space-y-6 max-w-lg p-8">
+    <div className="text-center space-y-8 max-w-2xl p-8">
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <div className="mx-auto w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
-          <FileText className="h-8 w-8 text-blue-600 dark:text-blue-300" />
-        </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          Welcome to ResumeMax
+        <h1 className="text-5xl font-bold text-foreground mb-8">
+          What can I help you refine?
         </h1>
       </motion.div>
-      <motion.p
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="text-lg text-gray-700 dark:text-gray-300"
-      >
-        Start chatting with our AI assistant to begin building your perfect
-        resume. Just type your first message below and watch your resume take
-        shape.
-      </motion.p>
+      
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6 }}
+        className="flex flex-wrap justify-center gap-3 mt-12"
       >
-        <div className="flex justify-center gap-2">
-          <div className="inline-flex h-2 w-2 animate-bounce rounded-full bg-blue-400 [animation-delay:-0.3s]"></div>
-          <div className="inline-flex h-2 w-2 animate-bounce rounded-full bg-blue-400 [animation-delay:-0.15s]"></div>
-          <div className="inline-flex h-2 w-2 animate-bounce rounded-full bg-blue-400"></div>
-        </div>
+        <button className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg text-sm border border-border transition-colors flex items-center gap-2">
+          Create a professional resume
+          <span className="text-muted-foreground">↗</span>
+        </button>
+        <button className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg text-sm border border-border transition-colors flex items-center gap-2">
+          Improve my work experience section
+          <span className="text-muted-foreground">↗</span>
+        </button>
+        <button className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg text-sm border border-border transition-colors flex items-center gap-2">
+          Optimize for tech industry
+          <span className="text-muted-foreground">↗</span>
+        </button>
       </motion.div>
     </div>
   </motion.div>
@@ -83,7 +79,7 @@ const MessageBubble = memo(
             className={`whitespace-pre-wrap text-sm backdrop-blur-md p-4 rounded-2xl shadow-sm ${
               message.role === "user"
                 ? "bg-blue-50 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100"
-                : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100"
+                : "bg-card text-card-foreground border border-border"
             }`}
           >
             {part.text}
@@ -100,12 +96,12 @@ const LoadingMessage = memo(() => (
   <motion.div
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
-    className="bg-white dark:bg-gray-800 shadow-sm p-4 rounded-2xl max-w-[80%] mr-auto flex items-center gap-3 text-sm"
+    className="bg-card text-card-foreground border border-border shadow-sm p-4 rounded-2xl max-w-[80%] mr-auto flex items-center gap-3 text-sm"
   >
     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
       <Loader2 className="h-4 w-4 animate-spin text-purple-600 dark:text-purple-300" />
     </div>
-    <span className="text-gray-700 dark:text-gray-300">
+    <span className="text-muted-foreground">
       Generating response...
     </span>
   </motion.div>
@@ -131,7 +127,7 @@ export const ChatMessages = ({ messages, isGenerating, hasInteracted }: ChatMess
   }, [messages.length]);
 
   return (
-    <div className="flex-1 relative bg-gray-50 dark:bg-gray-950 min-h-0 overflow-hidden">
+    <div className="flex-1 relative bg-background min-h-0 overflow-hidden">
       <AnimatePresence>
         {!hasInteracted && <WelcomeOverlay />}
       </AnimatePresence>

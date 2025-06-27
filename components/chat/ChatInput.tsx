@@ -32,23 +32,39 @@ export const ChatInput = ({ onSendMessage, isGenerating }: ChatInputProps) => {
   const isInputDisabled = isGenerating || !inputMessage.trim();
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 flex-shrink-0">
-      <div className="relative bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-        <Textarea
-          placeholder="Type your message here..."
-          className="min-h-[80px] max-h-[200px] overflow-y-auto px-4 py-3 pr-12 bg-transparent text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 border-0 resize-none focus:ring-0 rounded-xl text-sm"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <Button
-          className="absolute bottom-3 right-3 p-2 h-auto rounded-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white transition-colors"
-          onClick={handleSendMessage}
-          disabled={isInputDisabled}
-          aria-label="Send message"
-        >
-          <Send className="h-4 w-4" />
-        </Button>
+    <div className="p-6 bg-background border-t border-border flex-shrink-0">
+      <div className="max-w-3xl mx-auto">
+        <div className="relative bg-muted rounded-xl border border-border">
+          <Textarea
+            placeholder="Paste your resume or describe what you want to improve..."
+            className="min-h-[80px] max-h-[200px] overflow-y-auto px-4 py-3 pr-12 bg-transparent text-foreground placeholder:text-muted-foreground border-0 resize-none focus:ring-0 rounded-xl text-sm"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <div className="absolute bottom-3 right-3 flex items-center gap-2">
+            <div className="flex items-center gap-1 px-2 py-1 bg-card border border-border rounded text-xs text-muted-foreground">
+              <span>Casual</span>
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <div className="flex items-center gap-1 px-2 py-1 bg-card border border-border rounded text-xs text-muted-foreground">
+              <span>Formatting</span>
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <Button
+              className="p-2 h-auto rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground transition-colors"
+              onClick={handleSendMessage}
+              disabled={isInputDisabled}
+              aria-label="Send message"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
