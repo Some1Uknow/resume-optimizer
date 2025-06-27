@@ -31,18 +31,26 @@ export const metadata: Metadata = {
     siteName: 'ResumeMax',
     title: 'ResumeMax - AI-Powered Resume Builder',
     description: 'Create perfect resumes with AI. Type naturally, watch your resume build in real-time.',
-    images: [{
-      url: '/opengraph-image',
-      width: 1200,
-      height: 630,
-      alt: 'ResumeMax - AI Resume Builder'
-    }],
+    images: [
+      {
+        url: 'https://resumemax.vercel.app/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'ResumeMax - AI Resume Builder',
+      },
+      {
+        url: 'https://resumemax.vercel.app/opengraph-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'ResumeMax - AI Resume Builder',
+      }
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ResumeMax - AI-Powered Resume Builder',
     description: 'Create perfect resumes with AI. Type naturally, watch your resume build in real-time.',
-    images: ['/twitter-image'],
+    images: ['https://resumemax.vercel.app/twitter-image'],
     creator: '@resumemax',
   },
   manifest: '/site.webmanifest',

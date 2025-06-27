@@ -3,13 +3,11 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['puppeteer-core', '@sparticuz/chromium'],
   },
-  images: {
-    dangerouslyAllowSVG: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
   images: {
+    dangerouslyAllowSVG: true,
     remotePatterns: [
       {
         hostname: "lh3.googleusercontent.com",

@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og'
  
 export const runtime = 'edge'
+export const revalidate = 3600 // Cache for 1 hour
  
 export const alt = 'ResumeMax - AI-Powered Resume Builder'
 export const size = {
@@ -11,7 +12,8 @@ export const size = {
 export const contentType = 'image/png'
  
 export default async function TwitterImage() {
-  return new ImageResponse(
+  try {
+    return new ImageResponse(
     (
       <div
         style={{
@@ -186,4 +188,46 @@ export default async function TwitterImage() {
       ...size,
     }
   )
+  } catch (error) {
+    console.error('Error generating Twitter image:', error)
+    // Return a simple fallback image
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#0a0a0a',
+            fontFamily: 'system-ui, sans-serif',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '48px',
+              fontWeight: '700',
+              color: 'white',
+              marginBottom: '16px',
+            }}
+          >
+            ResumeMax
+          </div>
+          <div
+            style={{
+              fontSize: '24px',
+              color: '#94a3b8',
+            }}
+          >
+            AI-Powered Resume Builder
+          </div>
+        </div>
+      ),
+      {
+        ...size,
+      }
+    )
+  }
 }
