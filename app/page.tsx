@@ -18,8 +18,7 @@ export default function HomePage() {
 
   return (
     <HomeLayout>
-      <Header chatId={chatId} />
-
+      <Header />
       <main className="flex-1">
         <HeroSection chatId={chatId} />
         <HeroVideoSection />
@@ -30,7 +29,6 @@ export default function HomePage() {
         <PricingSection />
         <FinalCTASection chatId={chatId} />
       </main>
-
       <Footer />
     </HomeLayout>
   );

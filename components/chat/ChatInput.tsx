@@ -12,7 +12,12 @@ interface ChatInputProps {
   onInputChange?: (value: string) => void;
 }
 
-export const ChatInput = ({ onSendMessage, isGenerating, inputValue, onInputChange }: ChatInputProps) => {
+export const ChatInput = ({
+  onSendMessage,
+  isGenerating,
+  inputValue,
+  onInputChange,
+}: ChatInputProps) => {
   const [inputMessage, setInputMessage] = useState("");
 
   // Use controlled input if inputValue and onInputChange are provided
@@ -55,18 +60,6 @@ export const ChatInput = ({ onSendMessage, isGenerating, inputValue, onInputChan
             onKeyDown={handleKeyDown}
           />
           <div className="absolute bottom-3 right-3 flex items-center gap-2">
-            {/* <div className="flex items-center gap-1 px-2 py-1 bg-card border border-border rounded text-xs text-muted-foreground">
-              <span>Casual</span>
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-            <div className="flex items-center gap-1 px-2 py-1 bg-card border border-border rounded text-xs text-muted-foreground">
-              <span>Formatting</span>
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div> */}
             <Button
               className="p-2 h-auto rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground transition-colors"
               onClick={handleSendMessage}
