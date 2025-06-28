@@ -3,7 +3,7 @@
 import { useRef, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, Bot, Loader2, FileText } from "lucide-react";
+import { User, Bot, Loader2} from "lucide-react";
 import { ChatMessage } from "@/types/chat";
 import { ANIMATION_VARIANTS } from "@/constants/resume";
 

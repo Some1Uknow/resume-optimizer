@@ -34,7 +34,7 @@ export const ChatInput = ({
     if (!currentValue.trim() || isGenerating) return;
     onSendMessage(currentValue);
     handleValueChange("");
-  }, [currentValue, isGenerating, onSendMessage]);
+  }, [currentValue, isGenerating, onSendMessage, handleValueChange]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
