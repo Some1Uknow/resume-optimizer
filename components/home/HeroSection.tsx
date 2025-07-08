@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Sparkles, CheckCircle, Target, Zap, FileText } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle, Zap, FileText } from "lucide-react";
 import { SignInModal } from "@/components/ui/sign-in-modal";
 import { checkSession } from "@/actions/session-actions";
 
@@ -22,7 +22,7 @@ export function HeroSection({ chatId }: HeroSectionProps) {
       const hasSession = await checkSession();
       
       if (hasSession) {
-        router.push(`/builder/${chatId}`);
+        router.push(`app/builder/${chatId}`);
       } else {
         setShowSignInModal(true);
       }
@@ -34,149 +34,140 @@ export function HeroSection({ chatId }: HeroSectionProps) {
     }
   };
   return (
-    <section className="relative pt-20 pb-32 overflow-hidden">
+    <section className="relative pt-20 pb-32 overflow-hidden bg-gradient-to-br from-muted/50 via-background to-muted/50">
       {/* Gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
-      <div className="absolute top-20 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-muted/20 to-muted/30 rounded-full blur-3xl"></div>
+      <div className="absolute top-20 right-1/4 w-80 h-80 bg-gradient-to-r from-muted/30 to-muted/20 rounded-full blur-3xl"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Content */}
-          <div className="text-left">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-muted/50 backdrop-blur-sm border border-border rounded-full px-4 py-2 mb-8">
-              <Sparkles className="h-4 w-4 text-blue-400" />
-              <span className="text-sm font-medium text-muted-foreground">
-                AI-Powered Resume Builder
-              </span>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8">
-              <span className="bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-transparent">
-                AI Powered Resume
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Made for Success
-              </span>
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-              A smart, conversational tool for building world-class resumes
-              with AI optimization and seamless export. Built using the
-              latest in machine learning.
-            </p>
-
-            {/* CTA Button */}
-            <div className="mb-12">
-              <Button
-                onClick={handleGetStarted}
-                disabled={isCheckingSession}
-                size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-lg px-8 py-4 h-auto rounded-xl"
-              >
-                {isCheckingSession ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    Checking...
-                  </div>
-                ) : (
-                  <>
-                    Get Started
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </>
-                )}
-              </Button>
-            </div>
-
-            {/* Trust indicators */}
-            <div className="flex flex-col gap-4">
-              <p className="text-sm text-muted-foreground">
-                Trusted by professionals at
-              </p>
-              <div className="flex items-center gap-6 opacity-60">
-                <div className="text-muted-foreground font-semibold">Google</div>
-                <div className="text-muted-foreground font-semibold">Microsoft</div>
-                <div className="text-muted-foreground font-semibold">Amazon</div>
-                <div className="text-muted-foreground font-semibold">Meta</div>
-                <div className="text-muted-foreground font-semibold">Apple</div>
-              </div>
-            </div>
+        <div className="text-center max-w-4xl mx-auto">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-card/80 backdrop-blur-sm border border-border rounded-full px-4 py-2 mb-8">
+            <Sparkles className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-muted-foreground">
+              AI-Powered Resume Builder
+            </span>
           </div>
 
-          {/* Right Column - Resume Demo */}
-          <div className="relative">
-            <div className="bg-card border border-border rounded-2xl p-8 shadow-2xl">
-              {/* Resume Header */}
-              <div className="border-b border-border pb-6 mb-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">JS</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl">John Smith</h3>
-                    <p className="text-muted-foreground">Senior Software Engineer</p>
-                  </div>
+          {/* Main Headline */}
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 leading-tight">
+            <span className="text-foreground">
+              Transform your workflow
+            </span>
+            <br />
+            <span className="text-foreground">
+              with 
+            </span>
+            <span className="bg-gradient-to-r from-foreground via-muted-foreground to-foreground bg-clip-text text-transparent">
+              {" "}intelligent AI SaaS
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl text-muted-foreground mb-12 leading-relaxed max-w-2xl mx-auto">
+            Streamline your resume creation process with cutting-edge AI technology 
+            that understands your career goals and optimizes for success.
+          </p>
+
+          {/* CTA Button */}
+          <div className="mb-16">
+            <Button
+              onClick={handleGetStarted}
+              disabled={isCheckingSession}
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-8 py-4 h-auto rounded-xl shadow-lg hover:shadow-xl transition-all"
+            >
+              {isCheckingSession ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  Checking...
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  john.smith@email.com • +1 (555) 123-4567 • New York, NY
+              ) : (
+                <>
+                  Get Started
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* Dashboard Preview */}
+          <div className="relative max-w-5xl mx-auto">
+            <div className="bg-card rounded-2xl shadow-2xl border border-border p-6 md:p-8">
+              {/* Dashboard Header */}
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-foreground to-muted-foreground rounded-lg flex items-center justify-center">
+                    <FileText className="h-4 w-4 text-background" />
+                  </div>
+                  <span className="font-semibold text-foreground">Resume Builder</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 </div>
               </div>
 
-              {/* Resume Content Preview */}
-              <div className="space-y-4 mb-6">
-                <div>
-                  <h4 className="font-semibold mb-2 text-sm">EXPERIENCE</h4>
-                  <div className="space-y-1">
-                    <div className="h-2 bg-muted rounded w-full"></div>
-                    <div className="h-2 bg-muted rounded w-4/5"></div>
-                    <div className="h-2 bg-muted rounded w-3/4"></div>
-                  </div>
+              {/* Mock Dashboard Content */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div className="lg:col-span-2 space-y-4">
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
+                  <div className="h-4 bg-muted rounded w-1/2"></div>
+                  <div className="h-4 bg-muted rounded w-5/6"></div>
+                  <div className="h-4 bg-muted rounded w-2/3"></div>
                 </div>
-                <div>
-                  <h4 className="font-semibold mb-2 text-sm">SKILLS</h4>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">React</span>
-                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Node.js</span>
-                    <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">TypeScript</span>
+                <div className="space-y-3">
+                  <div className="h-8 bg-accent rounded-lg flex items-center justify-center">
+                    <span className="text-xs font-medium text-accent-foreground">AI Optimized</span>
+                  </div>
+                  <div className="h-8 bg-accent rounded-lg flex items-center justify-center">
+                    <span className="text-xs font-medium text-accent-foreground">ATS Ready</span>
+                  </div>
+                  <div className="h-8 bg-accent rounded-lg flex items-center justify-center">
+                    <span className="text-xs font-medium text-accent-foreground">Professional</span>
                   </div>
                 </div>
               </div>
 
-              {/* Quality Indicators */}
-              <div className="space-y-3 pt-4 border-t border-border">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm font-medium">ATS Optimized</span>
+              {/* Mock Charts */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="h-32 bg-muted rounded-lg border border-border p-4">
+                  <div className="h-3 bg-muted-foreground/30 rounded w-1/3 mb-4"></div>
+                  <div className="flex items-end gap-2 h-16">
+                    <div className="w-4 bg-foreground rounded-t h-8"></div>
+                    <div className="w-4 bg-foreground rounded-t h-12"></div>
+                    <div className="w-4 bg-foreground rounded-t h-6"></div>
+                    <div className="w-4 bg-foreground rounded-t h-16"></div>
+                    <div className="w-4 bg-foreground rounded-t h-10"></div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm font-medium">No Errors Detected</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Target className="h-5 w-5 text-blue-500" />
-                  <span className="text-sm font-medium">Keyword Optimized</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Zap className="h-5 w-5 text-yellow-500" />
-                  <span className="text-sm font-medium">AI Enhanced</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-purple-500" />
-                  <span className="text-sm font-medium">Professional Format</span>
+                <div className="h-32 bg-muted rounded-lg border border-border p-4">
+                  <div className="h-3 bg-muted-foreground/30 rounded w-1/2 mb-4"></div>
+                  <div className="flex justify-center items-center h-16">
+                    <div className="w-16 h-16 border-4 border-foreground border-t-transparent rounded-full"></div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Floating badge */}
-            <div className="absolute -top-4 -right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
-              Perfect Score
+            {/* Floating elements */}
+            <div className="absolute -top-4 -left-4 bg-card rounded-xl shadow-lg p-3 border border-border">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span className="text-sm font-medium text-foreground">Perfect Score</span>
+              </div>
+            </div>
+            <div className="absolute -top-4 -right-4 bg-card rounded-xl shadow-lg p-3 border border-border">
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-yellow-500" />
+                <span className="text-sm font-medium text-foreground">AI Enhanced</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       
       {/* Sign In Modal */}
       <SignInModal 

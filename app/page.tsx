@@ -4,13 +4,15 @@ import { v4 as uuidv4 } from "uuid";
 import { HomeLayout } from "@/components/home/HomeLayout";
 import { Header } from "@/components/home/Header";
 import { HeroSection } from "@/components/home/HeroSection";
-import { HeroVideoSection } from "@/components/home/HeroVideoSection";
-import { ProductDemoSection } from "@/components/home/ProductDemoSection";
-import { IntelligenceFeaturesSection } from "@/components/home/IntelligenceFeaturesSection";
-import { JustPressTabSection } from "@/components/home/JustPressTabSection";
-import { ModernProfessionalsSection } from "@/components/home/ModernProfessionalsSection";
-import { PricingSection } from "@/components/home/PricingSection";
-import { FinalCTASection } from "@/components/home/FinalCTASection";
+import { HowItWorksSection } from "@/components/home/HowItWorksSection";
+import { ScalableDataSection } from "@/components/home/ScalableDataSection";
+import { FeaturesControlSection } from "@/components/home/FeaturesControlSection";
+import { ConnectToolsSection } from "@/components/home/ConnectToolsSection";
+import { UnlockPotentialSection } from "@/components/home/UnlockPotentialSection";
+import { TestimonialsSection } from "@/components/home/TestimonialsSection";
+import { SimplePricingSection } from "@/components/home/SimplePricingSection";
+import { FAQSection } from "@/components/home/FAQSection";
+import { FinalCTASection2 } from "@/components/home/FinalCTASection2";
 import { Footer } from "@/components/home/Footer";
 
 export default function HomePage() {
@@ -21,13 +23,15 @@ export default function HomePage() {
       <Header />
       <main className="flex-1">
         <HeroSection chatId={chatId} />
-        <HeroVideoSection />
-        <ProductDemoSection />
-        <IntelligenceFeaturesSection />
-        <JustPressTabSection />
-        <ModernProfessionalsSection />
-        <PricingSection />
-        <FinalCTASection chatId={chatId} />
+        <HowItWorksSection />
+        <ScalableDataSection />
+        <FeaturesControlSection />
+        <ConnectToolsSection />
+        <UnlockPotentialSection />
+        <TestimonialsSection />
+        <SimplePricingSection />
+        <FAQSection />
+        <FinalCTASection2 />
       </main>
       <Footer />
     </HomeLayout>

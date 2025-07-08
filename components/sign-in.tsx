@@ -8,7 +8,7 @@ export default function SignIn() {
   const handleSignIn = async () => {
     "use server";
     const id = uuidv4();
-    await signIn("google", { redirectTo: `/builder/${id}` });
+    await signIn("google", { redirectTo: `/app/builder/${id}` });
   };
 
   return (

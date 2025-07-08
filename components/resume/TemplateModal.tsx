@@ -17,6 +17,11 @@ const templates = [
     name: "Professional",
     preview: "/templates/professional.png",
   },
+  {
+    id: "latex",
+    name: "LaTeX",
+    preview: "/templates/latex.png",
+  },
 ];
 
 export const TemplateModal = ({

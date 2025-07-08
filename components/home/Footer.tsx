@@ -30,28 +30,28 @@ const footerSections = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-800/50 bg-gray-950/50 backdrop-blur-sm py-12">
+    <footer className="border-t border-border bg-muted/50 backdrop-blur-sm py-12">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-purple-500 rounded flex items-center justify-center">
-                <FileText className="h-4 w-4 text-white" />
+              <div className="w-6 h-6 bg-gradient-to-br from-foreground to-muted-foreground rounded flex items-center justify-center">
+                <FileText className="h-4 w-4 text-background" />
               </div>
-              <span className="font-bold text-white">ResumeMax</span>
+              <span className="font-bold text-foreground">ResumeMax</span>
             </div>
-            <p className="text-gray-400 text-sm">
+            <p className="text-muted-foreground text-sm">
               AI-powered resume builder for modern professionals.
             </p>
           </div>
 
           {footerSections.map((section, index) => (
             <div key={index}>
-              <h3 className="font-semibold text-white mb-4">{section.title}</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
+              <h3 className="font-semibold text-foreground mb-4">{section.title}</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <Link href={link.href} className="hover:text-white transition-colors">
+                    <Link href={link.href} className="hover:text-foreground transition-colors">
                       {link.label}
                     </Link>
                   </li>
@@ -61,7 +61,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-800/50 text-center text-gray-400">
+        <div className="mt-12 pt-8 border-t border-border text-center text-muted-foreground">
           <p>© {new Date().getFullYear()} ResumeMax. All rights reserved.</p>
         </div>
       </div>

@@ -34,7 +34,7 @@ export default function BuilderPage({ session, params, initialChatData }) {
 
   const handleNewChat = useCallback(() => {
     const newChatId = uuidv4();
-    router.push(`/builder/${newChatId}`);
+    router.push(`/app/builder/${newChatId}`);
   }, [router]);
 
   const handleSendMessage = useCallback(

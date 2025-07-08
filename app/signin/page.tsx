@@ -13,7 +13,7 @@ export default async function Login() {
   if (session) {
     const id = uuidv4();
     // redirect to builder page with a unique id
-    redirect(`/builder/${id}`);
+    redirect(`/app/builder/${id}`);
   }
   return (
     <div className="flex min-h-screen flex-col">

@@ -11,7 +11,7 @@ export default async function SignUp() {
   const session = await auth();
   if (session) {
     const id = uuidv4();
-    redirect(`/builder/${id}`);
+    redirect(`/app/builder/${id}`);
   }
   return (
     <div className="flex min-h-screen flex-col">

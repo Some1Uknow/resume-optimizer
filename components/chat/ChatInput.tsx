@@ -22,13 +22,13 @@ export const ChatInput = ({
 
   // Use controlled input if inputValue and onInputChange are provided
   const currentValue = inputValue !== undefined ? inputValue : inputMessage;
-  const handleValueChange = (value: string) => {
+  const handleValueChange = useCallback((value: string) => {
     if (onInputChange) {
       onInputChange(value);
     } else {
       setInputMessage(value);
     }
-  };
+  }, [onInputChange]);
 
   const handleSendMessage = useCallback(() => {
     if (!currentValue.trim() || isGenerating) return;

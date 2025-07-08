@@ -221,7 +221,7 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
   };
 
   const handleChatSelect = (chatId: string) => {
-    router.push(`/builder/${chatId}`);
+    router.push(`/app/builder/${chatId}`);
     onClose();
   };
 
@@ -339,7 +339,7 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
                                   className="h-8 w-8 hover:bg-zinc-700"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    router.push(`/builder/${chat.id}`);
+                                    router.push(`/app/builder/${chat.id}`);
                                     onClose();
                                   }}
                                 >

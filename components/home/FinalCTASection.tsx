@@ -26,7 +26,7 @@ export function FinalCTASection({ chatId }: FinalCTASectionProps) {
               size="lg"
               className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-lg px-8 py-4 h-auto rounded-xl"
             >
-              <Link href={`/builder/${chatId}`}>
+              <Link href={`/app/builder/${chatId}`}>
                 Start Building Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>

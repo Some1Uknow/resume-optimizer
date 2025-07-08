@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import BuilderPage from "../../../components/Builder"; // Adjust path if necessary
+import BuilderPage from "@/components/Builder";
 import db from "@/prisma/prisma";
 import { redirect } from "next/navigation";
 

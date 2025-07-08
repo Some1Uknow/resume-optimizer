@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Computer Modern fonts for LaTeX template */
+@import url('https://fonts.googleapis.com/css2?family=Latin+Modern+Roman:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/index.css');
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -26,36 +30,36 @@
     --radius: 0.5rem;
 
     /* Sidebar */
-    --sidebar-background: 0 0% 96%;
+    --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 88%;
+    --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 85%;
+    --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 0 0% 8%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 8%;
+    --input: 0 0% 8%;
+    --ring: 0 0% 90%;
 
     /* Sidebar */
     --sidebar-background: 240 5.9% 10%;
@@ -101,6 +105,30 @@
 * {
   transition-property: background-color, border-color, color, fill, stroke;
   transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* LaTeX Computer Modern font classes */
+.font-computer-modern {
+  font-family: 'Computer Modern', 'Latin Modern Roman', 'Times New Roman', serif;
+}
+
+.font-computer-modern-mono {
+  font-family: 'Computer Modern Typewriter', 'Courier New', monospace;
+}
+
+/* LaTeX template specific styling */
+.template-latex {
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  text-rendering: optimizeLegibility;
+}
+
+.template-latex .latex-serif {
+  font-family: 'Computer Modern', 'Latin Modern Roman', 'Times New Roman', serif;
+  line-height: 1.2;
+}
+
+.template-latex .latex-mono {
+  font-family: 'Computer Modern Typewriter', 'Courier New', monospace;
+  letter-spacing: 0.02em;
 }
 
