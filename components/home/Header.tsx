@@ -24,7 +24,7 @@ export function Header() {
               <FileText className="h-5 w-5 text-background" />
             </div>
             <span className="text-xl font-bold text-foreground">
-              Q8s
+              JobMax
             </span>
           </Link>
 

@@ -4,11 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { HomeLayout } from "@/components/home/HomeLayout";
 import { Header } from "@/components/home/Header";
 import { HeroSection } from "@/components/home/HeroSection";
-import { HowItWorksSection } from "@/components/home/HowItWorksSection";
-import { ScalableDataSection } from "@/components/home/ScalableDataSection";
-import { FeaturesControlSection } from "@/components/home/FeaturesControlSection";
-import { ConnectToolsSection } from "@/components/home/ConnectToolsSection";
-import { UnlockPotentialSection } from "@/components/home/UnlockPotentialSection";
+import { FeaturesSection } from "@/components/home/FeaturesSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { SimplePricingSection } from "@/components/home/SimplePricingSection";
 import { FAQSection } from "@/components/home/FAQSection";
@@ -23,11 +19,7 @@ export default function HomePage() {
       <Header />
       <main className="flex-1">
         <HeroSection chatId={chatId} />
-        <HowItWorksSection />
-        <ScalableDataSection />
-        <FeaturesControlSection />
-        <ConnectToolsSection />
-        <UnlockPotentialSection />
+        <FeaturesSection />
         <TestimonialsSection />
         <SimplePricingSection />
         <FAQSection />

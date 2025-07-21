@@ -6,6 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { User, Bot, Loader2} from "lucide-react";
 import { ChatMessage } from "@/types/chat";
 import { ANIMATION_VARIANTS } from "@/constants/resume";
+import ReactMarkdown from "react-markdown";
+import type { Components } from "react-markdown";
 
 const WelcomeOverlay = memo(({ onSuggestionClick }: { onSuggestionClick?: (suggestion: string) => void }) => (
   <motion.div
@@ -78,13 +80,21 @@ const MessageBubble = memo(
         {message.parts.map((part, i) => (
           <div
             key={i}
-            className={`whitespace-pre-wrap text-sm backdrop-blur-md p-4 rounded-2xl shadow-sm ${
+            className={`text-sm backdrop-blur-md p-4 rounded-2xl shadow-sm ${
               message.role === "user"
                 ? "bg-blue-50 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100"
                 : "bg-card text-card-foreground border border-border"
             }`}
           >
-            {part.text}
+            {message.role === "user" ? (
+              <div className="whitespace-pre-wrap leading-relaxed">{part.text}</div>
+            ) : (
+              <div className="">
+                <ReactMarkdown>
+                  {part.text}
+                </ReactMarkdown>
+              </div>
+            )}
           </div>
         ))}
       </div>
