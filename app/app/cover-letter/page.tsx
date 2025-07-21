@@ -137,8 +137,8 @@ export default function CoverLetterGenerator() {
   }, [editor]);
 
   return (
-    <div className="h-screen bg-[#e8e8e8] p-4">
-      <div className="w-full h-full bg-white shadow-sm rounded-md flex flex-col">
+     <div className="min-h-screen bg-[#e8e8e8] py-2 flex flex-col">
+      <div className="w-full h-full bg-white p-4 shadow-sm rounded-md flex flex-col flex-1">
         {/* Header */}
 
         {/* Main Content */}
