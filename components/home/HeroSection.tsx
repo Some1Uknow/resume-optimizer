@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Sparkles, CheckCircle, Zap, FileText } from "lucide-react";
+import { ArrowRight, CheckCircle, Zap } from "lucide-react";
 import { SignInModal } from "@/components/ui/sign-in-modal";
 import { checkSession } from "@/actions/session-actions";
 import { JobTrackerPreview } from "@/components/home/JobTrackerPreview";

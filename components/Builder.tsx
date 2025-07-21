@@ -62,7 +62,7 @@ export default function BuilderPage({ session, params, initialChatData }) {
   );
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground">
+    <div className="flex flex-col h-screen bg-[#e8e8e8] text-gray-900">
       <ChatHeader
         session={session}
         onNewChat={handleNewChat}
@@ -89,16 +89,16 @@ export default function BuilderPage({ session, params, initialChatData }) {
           {hasInteracted && (
             <motion.div
               {...ANIMATION_VARIANTS.resume}
-              className="hidden md:flex flex-col h-full min-h-0 overflow-hidden bg-card border-l border-border"
+              className="hidden md:flex flex-col h-full min-h-0 overflow-hidden bg-white border-l border-gray-200"
             >
-              <div className="px-6 py-4 border-b border-border flex items-center justify-between flex-shrink-0">
-                <h2 className="font-semibold text-lg text-foreground">
+              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-gradient-to-r from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0]">
+                <h2 className="font-semibold text-lg text-gray-900">
                   Resume Preview
                 </h2>
                 <div className="flex gap-1">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#ef4444]"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#f59e42]"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#22c55e]"></div>
                 </div>
               </div>
 
@@ -111,8 +111,8 @@ export default function BuilderPage({ session, params, initialChatData }) {
                     />
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center h-full text-center p-10 text-muted-foreground">
-                    <p>Your resume will appear here once generated</p>
+                  <div className="flex items-center justify-center h-full text-center p-10 text-gray-500">
+                    <p className="text-[14px] leading-relaxed">Your resume will appear here once generated</p>
                   </div>
                 )}
               </ScrollArea>

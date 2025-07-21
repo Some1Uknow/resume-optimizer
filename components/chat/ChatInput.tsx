@@ -49,19 +49,23 @@ export const ChatInput = ({
   const isInputDisabled = isGenerating || !currentValue.trim();
 
   return (
-    <div className="p-6 bg-background border-t border-border flex-shrink-0">
+    <div className="p-6 border-t border-gray-200 flex-shrink-0">
       <div className="max-w-3xl mx-auto">
-        <div className="relative bg-muted rounded-xl border border-border">
+        <div className="relative bg-white rounded-[32px] border border-gray-200 shadow-sm">
           <Textarea
             placeholder="Paste your resume or describe what you want to improve..."
-            className="min-h-[80px] max-h-[200px] overflow-y-auto px-4 py-3 pr-12 bg-transparent text-foreground placeholder:text-muted-foreground border-0 resize-none focus:ring-0 rounded-xl text-sm"
+            className="min-h-[80px] max-h-[200px] overflow-y-auto px-6 py-4 pr-16 bg-white text-gray-900 placeholder:text-gray-500 border-0 resize-none focus:ring-0 rounded-[32px] text-[14px] leading-relaxed"
             value={currentValue}
             onChange={(e) => handleValueChange(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <div className="absolute bottom-3 right-3 flex items-center gap-2">
+          <div className="absolute bottom-4 right-4 flex items-center gap-2">
             <Button
-              className="p-2 h-auto rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground transition-colors"
+              className={`p-3 h-auto rounded-lg transition-all shadow-md hover:shadow-lg ${
+                isInputDisabled
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-gradient-to-br from-[#a855f7] to-[#7c3aed] hover:from-[#9333ea] hover:to-[#6d28d9] text-white"
+              }`}
               onClick={handleSendMessage}
               disabled={isInputDisabled}
               aria-label="Send message"

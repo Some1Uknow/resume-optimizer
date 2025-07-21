@@ -51,7 +51,7 @@ export function FeaturesSection() {
             Everything you need to land your dream job
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From AI-powered resume building to application tracking, we've got every step of your job search covered.
+            From AI-powered resume building to application tracking, we&apos;ve got every step of your job search covered.
           </p>
         </div>
 

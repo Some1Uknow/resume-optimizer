@@ -59,12 +59,12 @@ export const ResumeDisplay = ({ data, handleDataChange }: ResumeDisplayProps) =>
 
   return (
     <div className="relative max-w-4xl mx-auto">
-      <nav className="sticky top-0 z-10 bg-white/80 backdrop-blur-md rounded-lg shadow-lg my-3 p-4">
+      <nav className="sticky top-0 z-10 bg-gray-200 backdrop-blur-md rounded-[32px] shadow-sm my-4 p-6">
         <div className="flex justify-between items-center gap-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsTemplateModalOpen(true)}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg"
+              className="flex items-center gap-2 bg-gradient-to-br from-[#3b82f6] to-[#60a5fa] text-white px-6 py-3 rounded-lg hover:from-[#2563eb] hover:to-[#3b82f6] transition-all shadow-md hover:shadow-lg font-medium text-[14px]"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -80,8 +80,10 @@ export const ResumeDisplay = ({ data, handleDataChange }: ResumeDisplayProps) =>
           <button
             onClick={handleDownloadPDF}
             disabled={isDownloading}
-            className={`flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg transition-all shadow-md hover:shadow-lg ${
-              isDownloading ? "opacity-50 cursor-not-allowed" : "hover:from-green-600 hover:to-green-700"
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all shadow-md hover:shadow-lg font-medium text-[14px] ${
+              isDownloading 
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
+                : "bg-gradient-to-br from-[#22c55e] to-[#16a34a] text-white hover:from-[#16a34a] hover:to-[#15803d]"
             }`}
           >
             {isDownloading ? (
