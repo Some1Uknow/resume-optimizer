@@ -1,20 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-
-  Star,
-  Zap,
-  Shield,
-  Users,
-  BarChart,
-  Layers,
-} from "lucide-react";
-import { useTheme } from "next-themes";
+import { Star, Zap, Shield, Users, BarChart, Layers } from "lucide-react";
 import { SignInModal } from "@/components/ui/sign-in-modal";
 import { checkSession } from "@/actions/session-actions";
 import { useRouter } from "next/navigation";
-
 import { Header } from "@/components/home/Header";
 import { HeroSection } from "@/components/home/HeroSection";
 import { LogosSection } from "@/components/home/LogosSection";
@@ -134,10 +124,7 @@ export default function LandingPage() {
       <Footer />
 
       {/* Sign In Modal */}
-      <SignInModal
-        open={showSignInModal}
-        onOpenChange={setShowSignInModal}
-      />
+      <SignInModal open={showSignInModal} onOpenChange={setShowSignInModal} />
     </div>
   );
 }
