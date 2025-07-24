@@ -1,18 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { ArrowRight, CheckCircle, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { SignInModal } from "@/components/ui/sign-in-modal";
 import { checkSession } from "@/actions/session-actions";
-import { JobTrackerPreview } from "@/components/home/JobTrackerPreview";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-interface HeroSectionProps {
-  chatId: string;
-}
-
-export function HeroSection({ chatId }: HeroSectionProps) {
+export function HeroSection() {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(false);
   const router = useRouter();
@@ -23,7 +21,7 @@ export function HeroSection({ chatId }: HeroSectionProps) {
       const hasSession = await checkSession();
 
       if (hasSession) {
-        router.push(`app/builder/${chatId}`);
+        router.push(`app/builder/new`);
       } else {
         setShowSignInModal(true);
       }
@@ -34,85 +32,87 @@ export function HeroSection({ chatId }: HeroSectionProps) {
       setIsCheckingSession(false);
     }
   };
+
   return (
-    <section className="relative pt-20 pb-32 overflow-hidden bg-gradient-to-br from-muted/50 via-background to-muted/50">
-      {/* Gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-muted/20 to-muted/30 rounded-full blur-3xl"></div>
-      <div className="absolute top-20 right-1/4 w-80 h-80 bg-gradient-to-r from-muted/30 to-muted/20 rounded-full blur-3xl"></div>
+    <section className="w-full py-20 md:py-32 lg:py-40 overflow-hidden">
+      <div className="container px-4 md:px-6 relative">
+        <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative m-32">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Badge */}
-
-          {/* Main Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 leading-tight mt-12">
-            <span className="text-foreground">Transform your workflow</span>
-            <br />
-            <span className="text-foreground">with</span>
-            <span className="bg-gradient-to-r from-foreground via-muted-foreground to-foreground bg-clip-text text-transparent">
-              {" "}
-              intelligent AI SaaS
-            </span>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto mb-12"
+        >
+          <Badge
+            className="mb-4 rounded-full px-4 py-1.5 text-sm font-medium"
+            variant="secondary"
+          >
+            AI-Powered Job Search
+          </Badge>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+            Simplify your job hunting process
           </h1>
-
-          {/* Subtitle */}
-          <p className="text-lg md:text-xl text-muted-foreground mb-12 leading-relaxed max-w-2xl mx-auto">
-            Streamline your resume creation process with cutting-edge AI
-            technology that understands your career goals and optimizes for
-            success.
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Finding your dream job has never been easier. Our AI-powered
+            platform brings you a seamless, intuitive experience with advanced
+            tools that save time and boost creativity. Whether you're building
+            resumes, tracking applications, or generating cover letters.
           </p>
-
-          {/* CTA Button */}
-          <div className="mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="rounded-full h-12 px-8 text-base" onClick={handleGetStarted} disabled={isCheckingSession}>
+              Get Started Now
+              <ArrowRight className="ml-2 size-4" />
+            </Button>
             <Button
-              onClick={handleGetStarted}
-              disabled={isCheckingSession}
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-8 py-4 h-auto rounded-xl shadow-lg hover:shadow-xl transition-all"
+              variant="outline"
+              className="rounded-full h-12 px-8 text-base bg-transparent"
             >
-              {isCheckingSession ? (
-                <div className="flex items-center gap-2">
-                  <div className=" border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                  Checking...
-                </div>
-              ) : (
-                <>
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </>
-              )}
+              Try JobMax Now
             </Button>
           </div>
-        </div>
-      </div>
-
-      {/* Job Tracker Preview - Full width container */}
-      <div className="w-[70%] mx-auto relative px-6 lg:px-8">
-        <div className="bg-card rounded-2xl shadow-2xl border border-border overflow-hidden">
-          <JobTrackerPreview />
-        </div>
-
-        {/* Floating elements */}
-        <div className="absolute -top-4 -left-4 bg-card rounded-xl shadow-lg p-3 border border-border">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span className="text-sm font-medium text-foreground">
-              Perfect Score
-            </span>
+          <div className="flex items-center justify-center gap-4 mt-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Check className="size-4 text-primary" />
+              <span>No credit card</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Check className="size-4 text-primary" />
+              <span>14-day trial</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Check className="size-4 text-primary" />
+              <span>Cancel anytime</span>
+            </div>
           </div>
-        </div>
-        <div className="absolute -top-4 -right-4 bg-card rounded-xl shadow-lg p-3 border border-border">
-          <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-yellow-500" />
-            <span className="text-sm font-medium text-foreground">
-              AI Enhanced
-            </span>
-          </div>
-        </div>
-      </div>
+        </motion.div>
 
-      {/* Sign In Modal */}
-      <SignInModal open={showSignInModal} onOpenChange={setShowSignInModal} />
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="relative mx-auto max-w-5xl"
+        >
+          <div className="rounded-xl overflow-hidden shadow-2xl border border-border/40 bg-gradient-to-b from-background to-muted/20">
+            <Image
+              src="https://cdn.dribbble.com/userupload/12302729/file/original-fa372845e394ee85bebe0389b9d86871.png?resize=1504x1128&vertical=center"
+              width={1280}
+              height={720}
+              alt="SaaSify dashboard"
+              className="w-full h-auto"
+              priority
+            />
+            <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-black/10 dark:ring-white/10"></div>
+          </div>
+          <div className="absolute -bottom-6 -right-6 -z-10 h-[300px] w-[300px] rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 blur-3xl opacity-70"></div>
+          <div className="absolute -top-6 -left-6 -z-10 h-[300px] w-[300px] rounded-full bg-gradient-to-br from-secondary/30 to-primary/30 blur-3xl opacity-70"></div>
+        </motion.div>
+      </div>
+      <SignInModal
+        open={showSignInModal}
+        onOpenChange={setShowSignInModal}
+      />
     </section>
   );
 }

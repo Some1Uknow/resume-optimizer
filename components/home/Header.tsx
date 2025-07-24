@@ -1,85 +1,207 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FileText } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Icons } from "@/components/icons";
+import { motion } from "framer-motion";
+import { ChevronRight, Menu, X, Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
 import { SignInModal } from "@/components/ui/sign-in-modal";
+import { checkSession } from "@/actions/session-actions";
+import { useRouter } from "next/navigation";
 
 export function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(false);
+  const router = useRouter();
 
-  const handleSignInClick = () => {
-    setShowSignInModal(true);
+  useEffect(() => {
+    setMounted(true);
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-foreground to-muted-foreground rounded-lg flex items-center justify-center">
-              <FileText className="h-5 w-5 text-background" />
-            </div>
-            <span className="text-xl font-bold text-foreground">
-              JobMax
-            </span>
-          </Link>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8">
+  const handleGetStarted = async () => {
+    try {
+      setIsCheckingSession(true);
+      const hasSession = await checkSession();
+
+      if (hasSession) {
+        router.push(`app/builder/new`); // Assuming 'new' is a valid chat ID for a new resume
+      } else {
+        setShowSignInModal(true);
+      }
+    } catch (error) {
+      console.error("Error checking session:", error);
+      setShowSignInModal(true);
+    } finally {
+      setIsCheckingSession(false);
+    }
+  };
+
+  return (
+    <header
+      className={`sticky top-0 z-50 w-full backdrop-blur-lg transition-all duration-300 ${
+        isScrolled ? "bg-background/80 shadow-sm" : "bg-transparent"
+      }`}
+    >
+      <div className="container flex h-16 items-center justify-between">
+        <div className="flex items-center gap-2 font-bold">
+          <div className="size-8 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground">
+            J
+          </div>
+          <span>JOBMAX</span>
+        </div>
+        <nav className="hidden md:flex gap-8">
+          <Link
+            href="#features"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Features
+          </Link>
+          <Link
+            href="#testimonials"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Testimonials
+          </Link>
+          <Link
+            href="#pricing"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Pricing
+          </Link>
+          <Link
+            href="#faq"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            FAQ
+          </Link>
+        </nav>
+        <div className="hidden md:flex gap-4 items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {mounted && theme === "dark" ? (
+              <Sun className="size-[18px]" />
+            ) : (
+              <Moon className="size-[18px]" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+          <Link
+            href="#"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Log in
+          </Link>
+          <Button className="rounded-full" onClick={handleGetStarted} disabled={isCheckingSession}>
+            Get Started
+            <ChevronRight className="ml-1 size-4" />
+          </Button>
+        </div>
+        <div className="flex items-center gap-4 md:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full"
+          >
+            {mounted && theme === "dark" ? (
+              <Sun className="size-[18px]" />
+            ) : (
+              <Moon className="size-[18px]" />
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="size-5" />
+            ) : (
+              <Menu className="size-5" />
+            )}
+            <span className="sr-only">Toggle menu</span>
+          </Button>
+        </div>
+      </div>
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="md:hidden absolute top-16 inset-x-0 bg-background/95 backdrop-blur-lg border-b"
+        >
+          <div className="container py-4 flex flex-col gap-4">
             <Link
               href="#features"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="py-2 text-sm font-medium"
+              onClick={() => setMobileMenuOpen(false)}
             >
               Features
             </Link>
             <Link
+              href="#testimonials"
+              className="py-2 text-sm font-medium"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Testimonials
+            </Link>
+            <Link
               href="#pricing"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="py-2 text-sm font-medium"
+              onClick={() => setMobileMenuOpen(false)}
             >
               Pricing
             </Link>
             <Link
-              href="#about"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              href="#faq"
+              className="py-2 text-sm font-medium"
+              onClick={() => setMobileMenuOpen(false)}
             >
-              About
+              FAQ
             </Link>
-            <Link
-              href="#contact"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Contact
-            </Link>
-          </nav>
-
-          {/* Auth & Theme Toggle */}
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              onClick={handleSignInClick}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted border-0 flex items-center gap-2"
-            >
-              <Icons.google className="h-4 w-4" />
-              Sign in
-            </Button>
-            <Button
-              className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium px-4 py-2 rounded-lg"
-            >
-              Try Free
-            </Button>
-            <ModeToggle />
+            <div className="flex flex-col gap-2 pt-2 border-t">
+              <Link
+                href="#"
+                className="py-2 text-sm font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Log in
+              </Link>
+              <Button className="rounded-full">
+                Get Started
+                <ChevronRight className="ml-1 size-4" />
+              </Button>
+            </div>
           </div>
-        </div>
-      </div>
-      
-      {/* Sign In Modal */}
-      <SignInModal 
-        open={showSignInModal} 
-        onOpenChange={setShowSignInModal} 
+        </motion.div>
+      )}
+      <SignInModal
+        open={showSignInModal}
+        onOpenChange={setShowSignInModal}
       />
     </header>
   );

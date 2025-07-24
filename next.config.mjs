@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['puppeteer-core', '@sparticuz/chromium', 'pdf-parse'],
-  },
+  serverExternalPackages: [
+    "puppeteer-core",
+    "@sparticuz/chromium",
+    "pdf-parse",
+  ],
+
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -11,6 +14,9 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: "lh3.googleusercontent.com",
+      },
+      {
+        hostname: "cdn.dribbble.com",
       },
     ],
   },

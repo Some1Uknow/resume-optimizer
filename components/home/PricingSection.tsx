@@ -1,113 +1,256 @@
-import { Button } from "@/components/ui/button";
-import { CheckCircle2 } from "lucide-react";
+"use client";
 
-const pricingPlans = [
-  {
-    title: "Free",
-    price: "$0",
-    period: "/mo",
-    description: "For personal projects",
-    features: [
-      "1 resume",
-      "Basic templates",
-      "PDF export",
-      "Community support",
-    ],
-    popular: false,
-  },
-  {
-    title: "Pro",
-    price: "$4",
-    period: "/mo",
-    description: "For professional use",
-    features: [
-      "Unlimited resumes",
-      "Premium templates",
-      "AI optimization",
-      "Priority support",
-      "Analytics",
-    ],
-    popular: true,
-  },
-  {
-    title: "Team",
-    price: "$7",
-    period: "/mo",
-    description: "For growing teams",
-    features: [
-      "Everything in Pro",
-      "Team collaboration",
-      "Brand customization",
-      "API access",
-      "Dedicated support",
-    ],
-    popular: false,
-  },
-];
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="py-20 relative">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-transparent">
-              Unleash ResumeMax&apos;s
-              <br />
-              Full Potential
-            </span>
+    <section
+      id="pricing"
+      className="w-full py-20 md:py-32 bg-muted/30 relative overflow-hidden"
+    >
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_40%,transparent_100%)]"></div>
+
+      <div className="container px-4 md:px-6 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
+        >
+          <Badge
+            className="rounded-full px-4 py-1.5 text-sm font-medium"
+            variant="secondary"
+          >
+            Pricing
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            Simple, Transparent Pricing
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            One ResumeMax for everything. Use ResumeMax for the way you
-            <br />
-            want to work. Take total control of your resume creation.
+          <p className="max-w-[800px] text-muted-foreground md:text-lg">
+            Choose the plan that's right for your business. All plans
+            include a 14-day free trial.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {pricingPlans.map((plan, index) => (
-            <div
-              key={index}
-              className={`relative rounded-2xl border ${
-                plan.popular
-                  ? "border-primary/20 bg-primary/5 dark:border-white/20 dark:bg-white/5"
-                  : "border-border bg-card"
-              } backdrop-blur-sm p-8`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-400 to-purple-400 text-white dark:text-black text-xs font-bold px-4 py-2 rounded-full">
-                  MOST POPULAR
-                </div>
-              )}
-              <div className="text-center">
-                <h3 className="text-xl font-bold text-foreground mb-2">{plan.title}</h3>
-                <div className="flex items-end justify-center gap-1 mb-2">
-                  <span className="text-4xl font-bold text-foreground">{plan.price}</span>
-                  <span className="text-muted-foreground">{plan.period}</span>
-                </div>
-                <p className="text-muted-foreground mb-8">{plan.description}</p>
-
-                <ul className="space-y-3 mb-8 text-left">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center gap-3 text-foreground">
-                      <CheckCircle2 className="h-4 w-4 text-green-500 dark:text-green-400 flex-shrink-0" />
-                      <span className="text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  className={`w-full ${
-                    plan.popular
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
-                  } font-medium`}
-                >
-                  Get Started
-                </Button>
-              </div>
+        <div className="mx-auto max-w-5xl">
+          <Tabs defaultValue="monthly" className="w-full">
+            <div className="flex justify-center mb-8">
+              <TabsList className="rounded-full p-1">
+                <TabsTrigger value="monthly" className="rounded-full px-6">
+                  Monthly
+                </TabsTrigger>
+                <TabsTrigger value="annually" className="rounded-full px-6">
+                  Annually (Save 20%)
+                </TabsTrigger>
+              </TabsList>
             </div>
-          ))}
+            <TabsContent value="monthly">
+              <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
+                {[{
+                  name: "Starter",
+                  price: "$29",
+                  description: "Perfect for small teams and startups.",
+                  features: [
+                    "Up to 5 team members",
+                    "Basic analytics",
+                    "5GB storage",
+                    "Email support",
+                  ],
+                  cta: "Start Free Trial",
+                },
+                {
+                  name: "Professional",
+                  price: "$79",
+                  description: "Ideal for growing businesses.",
+                  features: [
+                    "Up to 20 team members",
+                    "Advanced analytics",
+                    "25GB storage",
+                    "Priority email support",
+                    "API access",
+                  ],
+                  cta: "Start Free Trial",
+                  popular: true,
+                },
+                {
+                  name: "Enterprise",
+                  price: "$199",
+                  description:
+                    "For large organizations with complex needs.",
+                  features: [
+                    "Unlimited team members",
+                    "Custom analytics",
+                    "Unlimited storage",
+                    "24/7 phone & email support",
+                    "Advanced API access",
+                    "Custom integrations",
+                  ],
+                  cta: "Contact Sales",
+                },
+                ].map((plan, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                  >
+                    <Card
+                      className={`relative overflow-hidden h-full ${
+                        plan.popular
+                          ? "border-primary shadow-lg"
+                          : "border-border/40 shadow-md"
+                      } bg-gradient-to-b from-background to-muted/10 backdrop-blur`}
+                    >
+                      {plan.popular && (
+                        <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-3 py-1 text-xs font-medium rounded-bl-lg">
+                          Most Popular
+                        </div>
+                      )}
+                      <CardContent className="p-6 flex flex-col h-full">
+                        <h3 className="text-2xl font-bold">{plan.name}</h3>
+                        <div className="flex items-baseline mt-4">
+                          <span className="text-4xl font-bold">
+                            {plan.price}
+                          </span>
+                          <span className="text-muted-foreground ml-1">
+                            /month
+                          </span>
+                        </div>
+                        <p className="text-muted-foreground mt-2">
+                          {plan.description}
+                        </p>
+                        <ul className="space-y-3 my-6 flex-grow">
+                          {plan.features.map((feature, j) => (
+                            <li key={j} className="flex items-center">
+                              <Check className="mr-2 size-4 text-primary" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <Button
+                          className={`w-full mt-auto rounded-full ${
+                            plan.popular
+                              ? "bg-primary hover:bg-primary/90"
+                              : "bg-muted hover:bg-muted/80"
+                          }`}
+                          variant={plan.popular ? "default" : "outline"}
+                        >
+                          {plan.cta}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="annually">
+              <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
+                {[{
+                  name: "Starter",
+                  price: "$23",
+                  description: "Perfect for small teams and startups.",
+                  features: [
+                    "Up to 5 team members",
+                    "Basic analytics",
+                    "5GB storage",
+                    "Email support",
+                  ],
+                  cta: "Start Free Trial",
+                },
+                {
+                  name: "Professional",
+                  price: "$63",
+                  description: "Ideal for growing businesses.",
+                  features: [
+                    "Up to 20 team members",
+                    "Advanced analytics",
+                    "25GB storage",
+                    "Priority email support",
+                    "API access",
+                  ],
+                  cta: "Start Free Trial",
+                  popular: true,
+                },
+                {
+                  name: "Enterprise",
+                  price: "$159",
+                  description:
+                    "For large organizations with complex needs.",
+                  features: [
+                    "Unlimited team members",
+                    "Custom analytics",
+                    "Unlimited storage",
+                    "24/7 phone & email support",
+                    "Advanced API access",
+                    "Custom integrations",
+                  ],
+                  cta: "Contact Sales",
+                },
+                ].map((plan, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                  >
+                    <Card
+                      className={`relative overflow-hidden h-full ${
+                        plan.popular
+                          ? "border-primary shadow-lg"
+                          : "border-border/40 shadow-md"
+                      } bg-gradient-to-b from-background to-muted/10 backdrop-blur`}
+                    >
+                      {plan.popular && (
+                        <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-3 py-1 text-xs font-medium rounded-bl-lg">
+                          Most Popular
+                        </div>
+                      )}
+                      <CardContent className="p-6 flex flex-col h-full">
+                        <h3 className="text-2xl font-bold">{plan.name}</h3>
+                        <div className="flex items-baseline mt-4">
+                          <span className="text-4xl font-bold">
+                            {plan.price}
+                          </span>
+                          <span className="text-muted-foreground ml-1">
+                            /month
+                          </span>
+                        </div>
+                        <p className="text-muted-foreground mt-2">
+                          {plan.description}
+                        </p>
+                        <ul className="space-y-3 my-6 flex-grow">
+                          {plan.features.map((feature, j) => (
+                            <li key={j} className="flex items-center">
+                              <Check className="mr-2 size-4 text-primary" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <Button
+                          className={`w-full mt-auto rounded-full ${
+                            plan.popular
+                              ? "bg-primary hover:bg-primary/90"
+                              : "bg-muted hover:bg-muted/80"
+                          }`}
+                          variant={plan.popular ? "default" : "outline"}
+                        >
+                          {plan.cta}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </section>

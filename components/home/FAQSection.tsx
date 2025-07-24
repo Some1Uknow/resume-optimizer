@@ -1,104 +1,89 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const faqs = [
-    {
-      question: "How does the AI resume optimization work?",
-      answer: "Our AI analyzes your resume content, job descriptions, and successful patterns from our database to optimize your resume for ATS systems and human recruiters. It suggests improvements for keywords, formatting, and content structure."
-    },
-    {
-      question: "Is my data secure and private?",
-      answer: "Yes, we use enterprise-grade encryption and security measures to protect your data. Your resume information is never shared with third parties, and you have full control over your data with the ability to delete it at any time."
-    },
-    {
-      question: "Can I export my resume to different formats?",
-      answer: "Absolutely! You can export your resume in PDF, Word (DOCX), and HTML formats. Our Pro plan also includes additional formatting options and custom templates."
-    },
-    {
-      question: "Do you offer refunds?",
-      answer: "Yes, we offer a 30-day money-back guarantee. If you're not satisfied with our service, you can request a full refund within 30 days of your purchase."
-    },
-    {
-      question: "How many resumes can I create?",
-      answer: "Free users can create 1 resume, while Pro users get unlimited resumes. You can create different versions for different job applications or industries."
-    },
-    {
-      question: "What makes your AI different from other resume builders?",
-      answer: "Our AI is trained on millions of successful resumes and job postings. It doesn't just format your resume - it understands context, industry requirements, and ATS optimization to provide intelligent suggestions that actually improve your chances of getting interviews."
-    }
-  ];
-
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
-    <section className="py-24 bg-slate-50 dark:bg-slate-800">
-      <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
-            Your question, our answer
+    <section id="faq" className="w-full py-20 md:py-32">
+      <div className="container px-4 md:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
+        >
+          <Badge
+            className="rounded-full px-4 py-1.5 text-sm font-medium"
+            variant="secondary"
+          >
+            FAQ
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            Frequently Asked Questions
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400">
-            Everything you need to know about our AI-powered resume builder.
+          <p className="max-w-[800px] text-muted-foreground md:text-lg">
+            Find answers to common questions about our platform.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm"
-            >
-              <button
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                onClick={() => toggleFAQ(index)}
+        <div className="mx-auto max-w-3xl">
+          <Accordion type="single" collapsible className="w-full">
+            {[{
+              question: "How does the 14-day free trial work?",
+              answer:
+                "Our 14-day free trial gives you full access to all features of your selected plan. No credit card is required to sign up, and you can cancel at any time during the trial period with no obligation.",
+            },
+            {
+              question: "Can I change plans later?",
+              answer:
+                "Yes, you can upgrade or downgrade your plan at any time. If you upgrade, the new pricing will be prorated for the remainder of your billing cycle. If you downgrade, the new pricing will take effect at the start of your next billing cycle.",
+            },
+            {
+              question: "Is there a limit to how many users I can add?",
+              answer:
+                "The number of users depends on your plan. The Starter plan allows up to 5 team members, the Professional plan allows up to 20, and the Enterprise plan has no limit on team members.",
+            },
+            {
+              question:
+                "Do you offer discounts for nonprofits or educational institutions?",
+              answer:
+                "Yes, we offer special pricing for nonprofits, educational institutions, and open-source projects. Please contact our sales team for more information.",
+            },
+            {
+              question: "How secure is my data?",
+              answer:
+                "We take security very seriously. All data is encrypted both in transit and at rest. We use industry-standard security practices and regularly undergo security audits. Our platform is compliant with GDPR, CCPA, and other relevant regulations.",
+            },
+            {
+              question: "What kind of support do you offer?",
+              answer:
+                "Support varies by plan. All plans include email support, with the Professional plan offering priority email support. The Enterprise plan includes 24/7 phone and email support. We also have an extensive knowledge base and community forum available to all users.",
+            },
+            ].map((faq, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
               >
-                <span className="font-medium text-slate-900 dark:text-white pr-4">
-                  {faq.question}
-                </span>
-                {openIndex === index ? (
-                  <ChevronUp className="w-5 h-5 text-slate-400 flex-shrink-0" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
-                )}
-              </button>
-              
-              {openIndex === index && (
-                <div className="px-6 pb-4">
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                <AccordionItem
+                  value={`item-${i}`}
+                  className="border-b border-border/40 py-2"
+                >
+                  <AccordionTrigger className="text-left font-medium hover:no-underline">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
                     {faq.answer}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <p className="text-slate-600 dark:text-slate-400 mb-4">
-            Still have questions? We&apos;re here to help.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="mailto:support@resumeoptimizer.com"
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Contact Support
-            </a>
-            <span className="hidden sm:inline text-slate-300 dark:text-slate-600">•</span>
-            <a
-              href="/help"
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Help Center
-            </a>
-          </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
+            ))}
+          </Accordion>
         </div>
       </div>
     </section>
