@@ -10,12 +10,16 @@ import { checkSession } from "@/actions/session-actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  handleGetStarted: () => void;
+}
+
+export function HeroSection({ handleGetStarted }: HeroSectionProps) {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(false);
   const router = useRouter();
 
-  const handleGetStarted = async () => {
+  const onGetStartedClick = async () => {
     try {
       setIsCheckingSession(true);
       const hasSession = await checkSession();
@@ -60,7 +64,7 @@ export function HeroSection() {
             resumes, tracking applications, or generating cover letters.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="rounded-full h-12 px-8 text-base" onClick={handleGetStarted} disabled={isCheckingSession}>
+            <Button size="lg" className="rounded-full h-12 px-8 text-base" onClick={onGetStartedClick} disabled={isCheckingSession}>
               Get Started Now
               <ArrowRight className="ml-2 size-4" />
             </Button>

@@ -17,78 +17,63 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Chrome } from "lucide-react"
+
+const ChromeIcon = () => (
+  <Chrome className="w-4 h-4 mr-2" />
+)
 
 export default function JobTracker() {
   return (
     <div className="min-h-screen bg-[#e8e8e8] py-2 flex flex-col">
-      <div className="w-full h-full bg-white p-4 shadow-sm rounded-md flex flex-col flex-1">
+      <div className="w-full h-full bg-white p-6 shadow-sm rounded-xl flex flex-col flex-1">
         {/* Header Section */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
+        <div className="mb-6">
+          <div className="flex justify-between items-center">
             <div>
               <h1 className="text-[32px] font-bold text-gray-900">Job Tracker</h1>
               <p className="text-gray-600 text-[14px]">
                 Manage your job applications and track your progress
               </p>
             </div>
-            <Button className="bg-gradient-to-br from-[#a855f7] via-[#9333ea] to-[#7c3aed] text-white px-4 py-2 rounded-lg text-[14px] font-medium">
+            <Button className="bg-gradient-to-br from-[#a855f7] via-[#9333ea] to-[#7c3aed] text-white px-4 py-2 rounded-lg text-[14px] font-medium flex items-center">
+              <ChromeIcon />
               Install Extension
             </Button>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-6 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-[16px] p-6 text-center">
-            <h3 className="text-[14px] font-medium text-gray-600 mb-2">
-              Total Jobs
-            </h3>
-            <div className="text-[32px] font-bold text-gray-900">0</div>
+        <div className="grid grid-cols-6 gap-4 mb-6">
+          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-xl p-4 shadow-sm flex flex-col justify-between items-start">
+            <h3 className="text-[14px] font-medium text-gray-600">Total Jobs</h3>
+            <div className="text-[28px] font-bold text-gray-900">0</div>
           </div>
-          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-[16px] p-6 text-center">
-            <h3 className="text-[14px] font-medium text-gray-600 mb-2">
-              Captured
-            </h3>
-            <div className="text-[32px] font-bold text-gray-900">0</div>
+          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-xl p-4 shadow-sm flex flex-col justify-between items-start">
+            <h3 className="text-[14px] font-medium text-gray-600">Captured</h3>
+            <div className="text-[28px] font-bold text-gray-900">0</div>
           </div>
-          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-[16px] p-6 text-center">
-            <h3 className="text-[14px] font-medium text-gray-600 mb-2">
-              Applied
-            </h3>
-            <div className="text-[32px] font-bold text-gray-900">0</div>
+          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-xl p-4 shadow-sm flex flex-col justify-between items-start">
+            <h3 className="text-[14px] font-medium text-gray-600">Applied</h3>
+            <div className="text-[28px] font-bold text-gray-900">0</div>
           </div>
-          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-[16px] p-6 text-center">
-            <h3 className="text-[14px] font-medium text-gray-600 mb-2">
-              Interviews
-            </h3>
-            <div className="text-[32px] font-bold text-gray-900">0</div>
+          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-xl p-4 shadow-sm flex flex-col justify-between items-start">
+            <h3 className="text-[14px] font-medium text-gray-600">Interviews</h3>
+            <div className="text-[28px] font-bold text-gray-900">0</div>
           </div>
-          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-[16px] p-6 text-center">
-            <h3 className="text-[14px] font-medium text-gray-600 mb-2">
-              Offers
-            </h3>
-            <div className="text-[32px] font-bold text-gray-900">0</div>
+          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-xl p-4 shadow-sm flex flex-col justify-between items-start">
+            <h3 className="text-[14px] font-medium text-gray-600">Offers</h3>
+            <div className="text-[28px] font-bold text-gray-900">0</div>
           </div>
-          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-[16px] p-6 text-center">
-            <h3 className="text-[14px] font-medium text-gray-600 mb-2">
-              Avg ATS Score
-            </h3>
-            <div className="text-[32px] font-bold text-gray-900">0%</div>
+          <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-xl p-4 shadow-sm flex flex-col justify-between items-start">
+            <h3 className="text-[14px] font-medium text-gray-600">Avg Selection rate</h3>
+            <div className="text-[28px] font-bold text-gray-900">0%</div>
           </div>
         </div>
 
         {/* Get Started Section */}
-        <div className="flex-1 flex flex-col items-center justify-center mb-8">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-[#a855f7] to-[#7c3aed] rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg
-                className="w-8 h-8 text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
+        <div className="flex-1 flex flex-col items-center justify-center mb-6">
+          <div className="text-center mb-6">
             <h2 className="text-[24px] font-bold text-gray-900 mb-2">
               Get Started with Job Tracking
             </h2>
@@ -99,14 +84,15 @@ export default function JobTracker() {
           </div>
           <Button
             variant="outline"
-            className="bg-white border-2 border-gray-200 text-gray-900 px-6 py-3 rounded-lg text-[14px] font-medium hover:bg-gray-50"
+            className="bg-white border-2 border-gray-200 text-gray-900 px-6 py-3 rounded-lg text-[14px] font-medium hover:bg-gray-50 flex items-center"
           >
+            <ChromeIcon />
             Install Chrome Extension
           </Button>
         </div>
 
         {/* Job Postings Table */}
-        <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-[16px] p-6">
+        <div className="bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] rounded-xl p-4">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-[18px] font-bold text-gray-900">
               Job Postings

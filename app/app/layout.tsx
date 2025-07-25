@@ -3,9 +3,6 @@ import { redirect } from "next/navigation";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default async function AppLayout({
   children,
@@ -20,7 +17,7 @@ export default async function AppLayout({
   }
 
   return (
-    <main suppressHydrationWarning className={inter.className}>
+    <main suppressHydrationWarning>
       <ThemeProvider
         attribute="class"
         defaultTheme="light"

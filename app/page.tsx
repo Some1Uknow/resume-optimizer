@@ -112,7 +112,7 @@ export default function LandingPage() {
     <div className="flex min-h-[100dvh] flex-col">
       <Header />
       <main className="flex-1">
-        <HeroSection />
+        <HeroSection handleGetStarted={handleGetStarted} />
         <LogosSection />
         <FeaturesSection />
         <HowItWorksSection />

@@ -1,0 +1,19 @@
+{
+  "name": "JobMax scanner",
+  "version": "1.0",
+  "description": "Uses Firebase to authenticate users and send Job data.",
+  "manifest_version": 3,
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA42m0hxfYV7RgPsEB42LdxP8VuvK/ucwyTR5B5rMw0qwKx3pizD2Lg2hEvr1m1GI5dgl+AsNCvyQY0/qEBI4AXBooXzQJsg7Pe3DW0o2GsMvB+IT16kEpZ2Oz8n8yH22Q88UMjpxDR/4zCW3IctMR5zsOrWnruxfR0cvGpiX9dpmcXcYxSGh9LdhTH2E4eurlfuXuuVYY9ih3k1hENLhAvRljEgOC+yBogVBg4Lel9LAPMXr0IP7fOPNpngfimfTlgQmM2JDwYt6+G8cT2Vs3FanWeumlqYxCFz3IVNl/DkYKh7bEpyG7Ukdwhk06VSgT5L7kvQXtuE0GeT21xpl4sQIDAQAB",
+  "action": {
+    "default_title": "JobMax"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' https://apis.google.com https://www.gstatic.com https://www.googleapis.com https://securetoken.googleapis.com; object-src 'self'"
+  }
+}

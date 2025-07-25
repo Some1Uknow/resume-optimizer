@@ -38,7 +38,7 @@ export function PricingSection() {
           </p>
         </motion.div>
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-4xl">
           <Tabs defaultValue="monthly" className="w-full">
             <div className="flex justify-center mb-8">
               <TabsList className="rounded-full p-1">
@@ -51,47 +51,37 @@ export function PricingSection() {
               </TabsList>
             </div>
             <TabsContent value="monthly">
-              <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
+              <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
                 {[{
-                  name: "Starter",
-                  price: "$29",
-                  description: "Perfect for small teams and startups.",
+                  name: "Free",
+                  price: "$0",
+                  description: "Perfect for beginners.",
                   features: [
-                    "Up to 5 team members",
-                    "Basic analytics",
-                    "5GB storage",
-                    "Email support",
+                    "3 resume downloads",
+                    "50 messages a day",
+                    "Basic Responses",
+                    "1 basic template",
+                    "Limited access to Job tracker",
+                    "5 cover letters only",
+                    "Basic Resume Optimization",
                   ],
-                  cta: "Start Free Trial",
+                  cta: "Start Free",
                 },
                 {
-                  name: "Professional",
-                  price: "$79",
-                  description: "Ideal for growing businesses.",
+                  name: "Pro - Pro Subscription",
+                  price: "$14.9",
+                  description: "Ideal for professionals.",
                   features: [
-                    "Up to 20 team members",
-                    "Advanced analytics",
-                    "25GB storage",
-                    "Priority email support",
-                    "API access",
+                    "Unlimited Resume downloads",
+                    "Unlimited AI usage",
+                    "Better ATS optimized responses",
+                    "All templates with LaTeX",
+                    "Full Access to Job Tracker",
+                    "Cover Letter generator",
+                    "Detailed Resume Optimization Reports",
                   ],
                   cta: "Start Free Trial",
                   popular: true,
-                },
-                {
-                  name: "Enterprise",
-                  price: "$199",
-                  description:
-                    "For large organizations with complex needs.",
-                  features: [
-                    "Unlimited team members",
-                    "Custom analytics",
-                    "Unlimited storage",
-                    "24/7 phone & email support",
-                    "Advanced API access",
-                    "Custom integrations",
-                  ],
-                  cta: "Contact Sales",
                 },
                 ].map((plan, i) => (
                   <motion.div
@@ -151,47 +141,37 @@ export function PricingSection() {
               </div>
             </TabsContent>
             <TabsContent value="annually">
-              <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
+              <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
                 {[{
-                  name: "Starter",
-                  price: "$23",
-                  description: "Perfect for small teams and startups.",
+                  name: "Free",
+                  price: "$0",
+                  description: "Perfect for beginners.",
                   features: [
-                    "Up to 5 team members",
-                    "Basic analytics",
-                    "5GB storage",
-                    "Email support",
+                    "3 resume downloads",
+                    "50 messages a day",
+                    "Basic Responses",
+                    "1 basic template",
+                    "Limited access to Job tracker",
+                    "5 cover letters only",
+                    "Basic Resume Optimization",
                   ],
-                  cta: "Start Free Trial",
+                  cta: "Start Free",
                 },
                 {
-                  name: "Professional",
-                  price: "$63",
-                  description: "Ideal for growing businesses.",
+                  name: "Pro - Pro Subscription",
+                  price: "$95", // 9.9 * 12 * 0.8 (20% discount) = 95.04
+                  description: "Ideal for professionals.",
                   features: [
-                    "Up to 20 team members",
-                    "Advanced analytics",
-                    "25GB storage",
-                    "Priority email support",
-                    "API access",
+                    "Unlimited Resume downloads",
+                    "Unlimited AI usage",
+                    "Better ATS optimized responses",
+                    "All templates with LaTeX",
+                    "Full Access to Job Tracker",
+                    "Cover Letter generator",
+                    "Detailed Resume Optimization Reports",
                   ],
                   cta: "Start Free Trial",
                   popular: true,
-                },
-                {
-                  name: "Enterprise",
-                  price: "$159",
-                  description:
-                    "For large organizations with complex needs.",
-                  features: [
-                    "Unlimited team members",
-                    "Custom analytics",
-                    "Unlimited storage",
-                    "24/7 phone & email support",
-                    "Advanced API access",
-                    "Custom integrations",
-                  ],
-                  cta: "Contact Sales",
                 },
                 ].map((plan, i) => (
                   <motion.div
@@ -220,7 +200,7 @@ export function PricingSection() {
                             {plan.price}
                           </span>
                           <span className="text-muted-foreground ml-1">
-                            /month
+                            /year
                           </span>
                         </div>
                         <p className="text-muted-foreground mt-2">

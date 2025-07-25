@@ -63,10 +63,7 @@ export function Header() {
     >
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 font-bold">
-          <div className="size-8 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground">
-            J
-          </div>
-          <span>JOBMAX</span>
+          <span className="text-blue-700 text-3xl">JobMax</span>
         </div>
         <nav className="hidden md:flex gap-8">
           <Link
@@ -114,7 +111,11 @@ export function Header() {
           >
             Log in
           </Link>
-          <Button className="rounded-full" onClick={handleGetStarted} disabled={isCheckingSession}>
+          <Button
+            className="rounded-full"
+            onClick={handleGetStarted}
+            disabled={isCheckingSession}
+          >
             Get Started
             <ChevronRight className="ml-1 size-4" />
           </Button>
@@ -199,10 +200,7 @@ export function Header() {
           </div>
         </motion.div>
       )}
-      <SignInModal
-        open={showSignInModal}
-        onOpenChange={setShowSignInModal}
-      />
+      <SignInModal open={showSignInModal} onOpenChange={setShowSignInModal} />
     </header>
   );
 }
